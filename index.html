@@ -16,7 +16,63 @@
   --green-600:#3B6D11; --green-50:#EAF3DE;
   --purple-50:#EEEDFE; --purple-800:#3C3489;
   --amber-50:#FAEEDA; --amber-800:#633806;
+  /* dark mode surface vars */
+  --card-bg: rgba(255,255,255,0.92);
+  --card-border: rgba(0,0,0,0.07);
+  --text-main: var(--gray-900);
+  --text-sub: var(--gray-600);
 }
+[data-theme="dark"] {
+  --card-bg: rgba(22,32,52,0.92);
+  --card-border: rgba(255,255,255,0.09);
+  --text-main: #e2e8f0;
+  --text-sub: #94a3b8;
+  --blue-900: #dbeafe;
+  --gray-900: #e2e8f0;
+  --gray-600: #94a3b8;
+}
+[data-theme="dark"] body {
+  background:linear-gradient(135deg,#060d1a 0%,#071428 40%,#061c3a 100%);
+}
+[data-theme="dark"] .top-bar { background:rgba(6,13,26,0.95); border-color:rgba(96,165,250,0.15); }
+[data-theme="dark"] .tab-nav { background:rgba(10,20,40,0.9); border-color:rgba(96,165,250,0.12); }
+[data-theme="dark"] .tab-btn { color:#94a3b8; }
+[data-theme="dark"] .tab-btn.active { background:rgba(24,95,165,0.35); color:#93c5fd; border-color:rgba(96,165,250,0.4); }
+[data-theme="dark"] .content-area { background:rgba(8,18,36,0.7); border-color:rgba(96,165,250,0.1); }
+[data-theme="dark"] .tarjeta-card { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.15); }
+[data-theme="dark"] .tarjeta-card:hover { border-color:rgba(96,165,250,0.35); }
+[data-theme="dark"] .tarjeta-nombre { color:#dbeafe; }
+[data-theme="dark"] .tarjeta-cargo { color:#94a3b8; }
+[data-theme="dark"] .tel-card { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.15); }
+[data-theme="dark"] .tel-nombre { color:#dbeafe; }
+[data-theme="dark"] .tel-cargo { color:#94a3b8; }
+[data-theme="dark"] .tel-group-label { color:#60a5fa; border-color:rgba(96,165,250,0.2); }
+[data-theme="dark"] .session-badge { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.2); color:#93c5fd; }
+[data-theme="dark"] .role-badge { background:rgba(15,28,52,0.9); color:#94a3b8; }
+[data-theme="dark"] .clock-display { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.2); }
+[data-theme="dark"] .clock-time { color:#93c5fd; }
+[data-theme="dark"] .clock-date { color:#64748b; }
+[data-theme="dark"] .btn-logout { background:rgba(163,45,45,0.2); color:#fca5a5; border-color:rgba(163,45,45,0.3); }
+[data-theme="dark"] .guia-card { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.15); color:#e2e8f0; }
+[data-theme="dark"] .guia-card h4 { color:#93c5fd; }
+[data-theme="dark"] .guia-steps li { color:#cbd5e1; }
+[data-theme="dark"] .guia-steps li em { color:#93c5fd; }
+[data-theme="dark"] .guia-filtro { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.2); color:#94a3b8; }
+[data-theme="dark"] .guia-filtro:hover { border-color:#60a5fa; color:#60a5fa; }
+
+/* DARK TOGGLE BUTTON */
+.btn-dark-toggle {
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid rgba(12,68,124,0.25);
+  background:rgba(12,68,124,0.08);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:background 0.2s, border-color 0.2s;
+  flex-shrink:0;
+}
+.btn-dark-toggle svg { stroke: #0C447C; }
+.btn-dark-toggle:hover { background:rgba(12,68,124,0.15); border-color:rgba(12,68,124,0.4); }
+[data-theme="dark"] .btn-dark-toggle { background:rgba(96,165,250,0.15); border-color:rgba(96,165,250,0.35); }
+[data-theme="dark"] .btn-dark-toggle svg { stroke: #fff; }
 #particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
 body {
   font-family:'Segoe UI',system-ui,sans-serif;
@@ -602,6 +658,17 @@ footer strong { color:rgba(255,255,255,0.7); }
         <div class="clock-date" id="clock-date">—</div>
       </div>
       <span id="shift-indicator" class="shift-indicator"></span>
+      <button class="btn-dark-toggle" onclick="toggleDark()" title="Modo oscuro/claro" id="btn-dark">
+        <svg id="icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg id="icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" style="display:none">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
       <span id="role-badge" class="role-badge role-view">Solo lectura</span>
       <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
     </div>
@@ -960,10 +1027,10 @@ footer strong { color:rgba(255,255,255,0.7); }
                 <div class="tel-cargo">Ingeniero — Técnico de Turno TGU</div>
               </div>
               <div class="tel-btns">
-                <a href="https://wa.me/50432807355" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                <a href="https://wa.me/50432805273" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
                 </a>
-                <a href="tel:+50432807355" class="tel-btn tel-btn-call" title="Llamar">
+                <a href="tel:+50432805273" class="tel-btn tel-btn-call" title="Llamar">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
                 </a>
               </div>
@@ -978,6 +1045,62 @@ footer strong { color:rgba(255,255,255,0.7); }
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
                 </a>
                 <a href="tel:+50431794995" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Virgilio Santos</div>
+                <div class="tel-cargo">Técnico — Tegucigalpa</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50432804974" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50432804974" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Donaldo Galeas</div>
+                <div class="tel-cargo">Técnico — Tegucigalpa</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50432805186" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50432805186" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Brayan López</div>
+                <div class="tel-cargo">Técnico — Tegucigalpa</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50431750806" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50431750806" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Jason Maldonado</div>
+                <div class="tel-cargo">Técnico — Tegucigalpa</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50432807355" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50432807355" class="tel-btn tel-btn-call" title="Llamar">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
                 </a>
               </div>
@@ -1031,6 +1154,48 @@ footer strong { color:rgba(255,255,255,0.7); }
               </div>
               <div class="tel-btns">
                 <a href="tel:+50422000000" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo Servicio al Cliente -->
+        <div>
+          <div class="tel-group-label">Servicio al Cliente</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Sinthia Leiva</div>
+                <div class="tel-cargo">Servicio al Cliente — Analítica Hondureña</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50432804912" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50432804912" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo Insumos -->
+        <div>
+          <div class="tel-group-label">Insumos</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Francis Méndez</div>
+                <div class="tel-cargo">Insumos — Analítica Hondureña</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50432804033" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50432804033" class="tel-btn tel-btn-call" title="Llamar">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
                 </a>
               </div>
@@ -1695,6 +1860,26 @@ function updateShiftIndicator(now){
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+/* DARK MODE */
+function toggleDark(){
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('icon-dark').style.display  = isDark ? '' : 'none';
+  document.getElementById('icon-light').style.display = isDark ? 'none' : '';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+// Restore saved preference
+(function(){
+  const saved = localStorage.getItem('theme');
+  if(saved === 'dark'){
+    document.documentElement.setAttribute('data-theme','dark');
+    const d = document.getElementById('icon-dark');
+    const l = document.getElementById('icon-light');
+    if(d) d.style.display='none';
+    if(l) l.style.display='';
+  }
+})();
 
 </script>
 </body>
