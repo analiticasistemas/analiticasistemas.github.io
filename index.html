@@ -1036,18 +1036,46 @@ footer strong { color:rgba(255,255,255,0.7); }
   window.addEventListener('resize',resize); resize(); draw();
 })();
 
-/* CÓDIGOS DE ACCESO — editar aquí */
+/* CÓDIGOS — almacenados como SHA-256, nunca en texto plano */
 const CODIGOS_VALIDOS = [
-  { codigo:"TEC2024",   nombre:"Admin General",   rol:"it" },
-  { codigo:"TURN2025",  nombre:"Supervisor",       rol:"it" },
-  { codigo:"ANALITICA", nombre:"Recursos Humanos", rol:"it" },
-  { codigo:"GERENCIA1", nombre:"Gerencia",         rol:"it" },
-  { codigo:"SOPORTE77", nombre:"Soporte TI",       rol:"it" },
-  { codigo:"HESCUELA",  nombre:"Hospital Escuela", rol:"view" },
+  { hash:"23d8b81869bb3aa3d4a67fc1a23d4fef124994578c93452f98d192d492b1c4c4", nombre:"Admin General",   rol:"it"   },
+  { hash:"212fa6bf6aa298c9f755b96cb36004853155d8900d1b4de6dd326acc34583e9e", nombre:"Hospital Escuela", rol:"view" },
 ];
 
-const MAX_INTENTOS = 5;
-let intentos=0, bloqueado=false, rolActual="view";
+/* Hashing con SubtleCrypto (nativo del navegador, sin librerías) */
+async function sha256(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* BLOQUEO PERSISTENTE — sobrevive F5 usando sessionStorage */
+const BLOQUEO_KEY = 'analitica_blq';
+const INTENTOS_KEY = 'analitica_int';
+const MAX_INTENTOS = 3;
+const TIMEOUT_MS = 15 * 60 * 1000; /* 15 min inactividad */
+
+let rolActual = "view";
+let sessionTimer = null;
+
+function getIntentos(){ return parseInt(sessionStorage.getItem(INTENTOS_KEY)||'0'); }
+function setIntentos(n){ sessionStorage.setItem(INTENTOS_KEY, n); }
+function isBloqueado(){ return sessionStorage.getItem(BLOQUEO_KEY)==='1'; }
+function setBloqueado(){ sessionStorage.setItem(BLOQUEO_KEY,'1'); }
+
+/* Delay artificial anti-brute-force (crece con cada intento) */
+let checkDelay = 400;
+
+/* TIMEOUT DE SESIÓN por inactividad */
+function resetTimer(){
+  clearTimeout(sessionTimer);
+  sessionTimer = setTimeout(()=>{
+    logout();
+    showToast('Sesión cerrada por inactividad');
+  }, TIMEOUT_MS);
+}
+['click','keydown','touchstart'].forEach(ev=>
+  document.addEventListener(ev, ()=>{ if(rolActual!=='view' || document.getElementById('main-content').style.display!=='none') resetTimer(); }, {passive:true})
+);
 
 /* TARJETAS — editar nombre, cargo, telefono aquí */
 const TARJETAS_DATA = [
@@ -1068,24 +1096,47 @@ const codeInput=document.getElementById('code-input');
 const errorMsg=document.getElementById('error-msg');
 const hintsEl=document.getElementById('attempts-hint');
 
+/* Bloquear UI si hay bloqueo previo en sessionStorage */
+if(isBloqueado()){
+  document.getElementById('btn-enter').disabled=true;
+  errorMsg.style.display='block';
+  errorMsg.textContent='Demasiados intentos. Cierra el navegador para reintentar.';
+  hintsEl.textContent='';
+}
+
 codeInput.addEventListener('keydown',e=>{ if(e.key==='Enter') checkCode(); });
 codeInput.addEventListener('input',()=>{ codeInput.classList.remove('error','ok'); errorMsg.style.display='none'; });
 
-function checkCode(){
-  if(bloqueado) return;
+async function checkCode(){
+  if(isBloqueado()) return;
   const val=codeInput.value.trim().toUpperCase();
-  const match=CODIGOS_VALIDOS.find(c=>c.codigo===val);
+  if(!val) return;
+
+  /* Deshabilitar botón durante la verificación */
+  document.getElementById('btn-enter').disabled=true;
+
+  /* Delay anti-brute-force */
+  await new Promise(r=>setTimeout(r, checkDelay));
+  checkDelay = Math.min(checkDelay * 2, 4000);
+
+  const hashed = await sha256(val);
+  const match = CODIGOS_VALIDOS.find(c=>c.hash===hashed);
+
+  document.getElementById('btn-enter').disabled=false;
+
   if(match){
     codeInput.classList.add('ok'); errorMsg.style.display='none';
-    setTimeout(()=>showMain(match.nombre, match.rol),400);
+    setIntentos(0);
+    setTimeout(()=>showMain(match.nombre, match.rol), 400);
   } else {
-    intentos++;
+    const n = getIntentos() + 1;
+    setIntentos(n);
     codeInput.classList.remove('ok'); codeInput.classList.add('error');
     errorMsg.style.display='block'; codeInput.value='';
-    const restantes=MAX_INTENTOS-intentos;
-    if(restantes<=0){
-      bloqueado=true;
-      errorMsg.textContent='Demasiados intentos. Recarga la página.';
+    const restantes = MAX_INTENTOS - n;
+    if(restantes <= 0){
+      setBloqueado();
+      errorMsg.textContent='Demasiados intentos. Cierra el navegador para reintentar.';
       document.getElementById('btn-enter').disabled=true;
       hintsEl.textContent='';
     } else {
@@ -1100,25 +1151,27 @@ function showMain(nombre, rol){
   const mc=document.getElementById('main-content');
   mc.style.display='flex'; mc.classList.add('visible');
   document.getElementById('session-name').textContent=nombre;
-  // show/hide role badge
   const badge = document.getElementById('role-badge');
   if(rol==='it'){
     badge.textContent='✦ IT Admin'; badge.className='role-badge role-it';
   } else {
     badge.textContent='Solo lectura'; badge.className='role-badge role-view';
   }
+  resetTimer();
   renderTarjetas();
   showToast('Bienvenido, '+nombre);
 }
 
 function logout(){
+  clearTimeout(sessionTimer);
   document.getElementById('lock-screen').style.display='flex';
   const mc=document.getElementById('main-content');
   mc.style.display='none'; mc.classList.remove('visible');
   codeInput.value=''; codeInput.classList.remove('ok','error');
   errorMsg.style.display='none';
-  intentos=0; bloqueado=false; rolActual='view'; hintsEl.textContent='';
-  document.getElementById('btn-enter').disabled=false;
+  rolActual='view'; hintsEl.textContent='';
+  checkDelay=400;
+  if(!isBloqueado()) document.getElementById('btn-enter').disabled=false;
 }
 
 /* TARJETAS */
