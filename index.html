@@ -308,6 +308,85 @@ footer strong { color:rgba(255,255,255,0.7); }
   .content-area{background:#fff;}
   .btn-logout{display:none!important;}
 }
+.tarjeta-action-btns { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+.btn-whatsapp, .btn-llamar {
+  display:inline-flex; align-items:center; gap:7px;
+  border-radius:10px; padding:8px 14px;
+  font-size:0.85rem; font-weight:700; text-decoration:none; letter-spacing:0.02em;
+  transition:background 0.2s, transform 0.15s, box-shadow 0.2s;
+  flex:1; justify-content:center; min-width:110px;
+}
+.btn-whatsapp {
+  background:rgba(37,211,102,0.18); border:1.5px solid rgba(37,211,102,0.55); color:#fff;
+}
+.btn-whatsapp:hover { background:rgba(37,211,102,0.32); transform:translateY(-1px); box-shadow:0 4px 16px rgba(37,211,102,0.3); }
+.btn-llamar {
+  background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.3); color:#fff;
+}
+.btn-llamar:hover { background:rgba(255,255,255,0.22); transform:translateY(-1px); box-shadow:0 4px 16px rgba(255,255,255,0.15); }
+
+/* GUÍA RÁPIDA */
+.guia-card {
+  background:#fff; border:1px solid rgba(12,68,124,0.1);
+  border-radius:14px; overflow:hidden;
+  box-shadow:0 2px 10px rgba(12,68,124,0.06);
+}
+.guia-card-header {
+  display:flex; align-items:center; gap:12px;
+  background:linear-gradient(135deg,#042C53,#185FA5);
+  padding:0.85rem 1.25rem;
+}
+.guia-titulo {
+  font-size:0.95rem; font-weight:700; color:#fff; letter-spacing:0.01em;
+}
+.guia-steps {
+  padding:1rem 1.25rem 1rem 2.5rem;
+  display:flex; flex-direction:column; gap:6px;
+}
+.guia-steps li {
+  font-size:0.85rem; color:var(--gray-800); line-height:1.55;
+  padding-left:4px;
+}
+.guia-filtro {
+  font-size:0.75rem; font-weight:600; padding:5px 12px;
+  border-radius:20px; border:1px solid var(--gray-100);
+  background:#fff; color:var(--gray-600); cursor:pointer;
+  transition:all 0.15s;
+}
+.guia-filtro:hover { border-color:var(--blue-600); color:var(--blue-600); }
+.guia-filtro.active { background:var(--blue-800); color:#fff; border-color:var(--blue-800); }
+.guia-badge {
+  font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+  background:rgba(255,255,255,0.18); color:#fff; border-radius:20px;
+  padding:3px 10px; white-space:nowrap; flex-shrink:0;
+}
+
+/* TELÉFONOS */
+.tel-group-label {
+  font-size:0.72rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.1em; color:var(--blue-600);
+  margin-bottom:8px; padding-left:2px;
+}
+.tel-card {
+  background:#fff; border:1px solid rgba(12,68,124,0.1);
+  border-radius:12px; padding:0.9rem 1.1rem;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  box-shadow:0 1px 6px rgba(12,68,124,0.06);
+  transition:box-shadow 0.2s, transform 0.15s;
+}
+.tel-card:hover { transform:translateY(-1px); box-shadow:0 4px 14px rgba(12,68,124,0.1); }
+.tel-info { flex:1; min-width:0; }
+.tel-nombre { font-size:0.95rem; font-weight:700; color:var(--blue-900); }
+.tel-cargo { font-size:0.75rem; color:var(--gray-600); margin-top:2px; }
+.tel-btns { display:flex; gap:8px; flex-shrink:0; }
+.tel-btn {
+  width:36px; height:36px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  text-decoration:none; transition:transform 0.15s, opacity 0.15s;
+}
+.tel-btn:hover { transform:scale(1.1); opacity:0.85; }
+.tel-btn-wa { background:#e8faf0; border:1px solid rgba(37,211,102,0.3); }
+.tel-btn-call { background:var(--blue-50); border:1px solid var(--blue-100); }
 
 /* ROLE BADGES */
 .role-badge {
@@ -488,6 +567,14 @@ footer strong { color:rgba(255,255,255,0.7); }
     <button class="tab-btn" onclick="switchTab('sps',this)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       Turno San Pedro Sula
+    </button>
+    <button class="tab-btn" onclick="switchTab('guia',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Guía Rápida
+    </button>
+    <button class="tab-btn" onclick="switchTab('telefonos',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Teléfonos
     </button>
   </div>
   <div class="content-area">
@@ -676,6 +763,237 @@ footer strong { color:rgba(255,255,255,0.7); }
     </div>
   </div><!-- /tab-sps -->
 
+  <!-- TAB GUÍA RÁPIDA -->
+  <div id="tab-guia" class="tab-panel" style="display:none">
+    <div style="max-width:780px;margin:0 auto;padding:0.5rem 0;">
+      <div class="tarjetas-header" style="margin-bottom:1.5rem;">
+        <h3>
+          <span class="titulo-turno">
+            <span class="titulo-linea">Procedimientos</span>
+            <span class="titulo-destacado">Guía Rápida</span>
+          </span>
+        </h3>
+      </div>
+
+      <!-- Filtro por equipo -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;">
+        <button class="guia-filtro active" onclick="filtrarGuia('todos',this)">Todos</button>
+        <button class="guia-filtro" onclick="filtrarGuia('bc6200',this)">Mindray BC-6200</button>
+        <button class="guia-filtro" onclick="filtrarGuia('siemens',this)">Siemens CA-660</button>
+        <button class="guia-filtro" onclick="filtrarGuia('exl200',this)">EXL 200</button>
+        <button class="guia-filtro" onclick="filtrarGuia('rp500',this)">RapidPoint 500</button>
+        <button class="guia-filtro" onclick="filtrarGuia('atellica',this)">Atellica 1500</button>
+        <button class="guia-filtro" onclick="filtrarGuia('clinitek',this)">Clinitek Advantus</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;" id="guia-lista">
+
+        <!-- BC-6200 -->
+        <div class="guia-card" data-equipo="bc6200">
+          <div class="guia-card-header">
+            <span class="guia-badge">Hematología</span>
+            <span class="guia-titulo">Mindray BC-6200 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar que complete el ciclo de auto-verificación (aprox. 3 min). No interrumpir el proceso.</li>
+            <li>Verificar que los reactivos (Diluent, Lyse, Rinse) tengan nivel suficiente antes de iniciar la jornada. Reemplazar si el indicador está en rojo.</li>
+            <li>Correr el control de calidad (QC) en los tres niveles (bajo, normal, alto) antes de procesar muestras de pacientes. Los resultados deben estar dentro del rango establecido.</li>
+            <li>Mezclar suavemente las muestras de sangre total (EDTA) por inversión 8-10 veces antes de cargarlas. No agitar vigorosamente.</li>
+            <li>Al finalizar la jornada, ejecutar el ciclo de limpieza diaria desde el menú <em>Mantenimiento → Lavado diario</em>.</li>
+            <li>Si aparece alarma de obstrucción, realizar el ciclo de desbloqueo desde el menú. Si persiste, notificar al técnico de turno.</li>
+          </ol>
+        </div>
+
+        <!-- CA-660 -->
+        <div class="guia-card" data-equipo="siemens">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Coagulación</span>
+            <span class="guia-titulo">Siemens CA-660 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y dejar que complete la inicialización y calentamiento del bloque térmico (37 °C). Verificar temperatura antes de procesar.</li>
+            <li>Preparar los reactivos (tromboplastina, tampón, etc.) según indicaciones del fabricante. Evitar burbujas al reconstituir.</li>
+            <li>Correr calibraciones y controles al inicio de cada jornada o cada vez que se abre un nuevo lote de reactivo.</li>
+            <li>Usar tubos de citrato sódico 3.2 % correctamente llenados (relación 9:1 sangre:citrato). Tubos mal llenados invalidan resultados.</li>
+            <li>Verificar que la impresora tenga papel y que el registro de resultados esté activo antes de procesar muestras.</li>
+            <li>Al finalizar, cubrir los reactivos para evitar evaporación y ejecutar el ciclo de limpieza de las agujas desde el menú de mantenimiento.</li>
+          </ol>
+        </div>
+
+        <!-- EXL 200 -->
+        <div class="guia-card" data-equipo="exl200">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Inmunoanálisis</span>
+            <span class="guia-titulo">EXL 200 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar que el sistema óptico y la fuente de luz completen el auto-diagnóstico inicial.</li>
+            <li>Verificar fecha de vencimiento de los kits de reactivos antes de cargarlos. No usar reactivos vencidos aunque el nivel sea suficiente.</li>
+            <li>Realizar la calibración correspondiente al tipo de prueba antes de procesar muestras. Registrar el número de lote.</li>
+            <li>Mantener las muestras a temperatura adecuada (2-8 °C) hasta el momento del análisis. Centrifugar correctamente para obtener suero limpio.</li>
+            <li>No dejar reactivos cargados en el equipo por más de 24 h sin uso. Retirar y refrigerar según protocolo.</li>
+            <li>Ante resultado fuera de rango en control de calidad, no reportar resultados de pacientes hasta resolver la causa y repetir el control.</li>
+          </ol>
+        </div>
+
+        <!-- RapidPoint 500 -->
+        <div class="guia-card" data-equipo="rp500">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Gases en Sangre</span>
+            <span class="guia-titulo">Siemens RapidPoint 500 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Verificar que el cartucho de reactivos tenga fecha de vigencia activa y que los sensores estén calibrados (el equipo muestra el estado en pantalla principal).</li>
+            <li>Procesar muestras de sangre arterial en jeringa heparinizada libre de burbujas de aire. Las burbujas alteran los resultados de pO₂.</li>
+            <li>Analizar la muestra dentro de los primeros 15 minutos después de la extracción. Si hay demora, mantener la jeringa en hielo.</li>
+            <li>Ingresar correctamente la temperatura del paciente, FiO₂ y modo ventilatorio si aplica, para obtener los valores corregidos.</li>
+            <li>Ejecutar el control de calidad con los niveles bajo, normal y alto antes de procesar la primera muestra del día.</li>
+            <li>Si aparece mensaje de calibración fallida, no procesar muestras y notificar al técnico de turno inmediatamente.</li>
+          </ol>
+        </div>
+
+        <!-- Atellica 1500 -->
+        <div class="guia-card" data-equipo="atellica">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Química Clínica</span>
+            <span class="guia-titulo">Siemens Atellica 1500 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Al encender, el sistema realiza verificación automática de módulos. Esperar el estado "Ready" en todos los módulos antes de cargar muestras.</li>
+            <li>Verificar niveles de agua destilada, detergente y desecho líquido antes de iniciar la jornada. Niveles bajos detienen el procesamiento automáticamente.</li>
+            <li>Cargar los cassettes de reactivos verificando código de barras legible y temperatura de almacenamiento correcta (ver indicador en cassette).</li>
+            <li>Correr calibradores y controles de calidad al inicio del turno y cada vez que se instale un lote nuevo de reactivo.</li>
+            <li>Para muestras STAT (urgentes), usar el carril prioritario del módulo de entrada para procesamiento inmediato.</li>
+            <li>Al finalizar el turno, ejecutar el ciclo de mantenimiento diario desde <em>Menú → Mantenimiento → Rutina diaria</em> y verificar que complete sin errores.</li>
+          </ol>
+        </div>
+
+        <!-- Clinitek Advantus -->
+        <div class="guia-card" data-equipo="clinitek">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Uroanálisis</span>
+            <span class="guia-titulo">Clinitek Advantus — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Verificar que las tiras reactivas (Multistix o equivalente compatible) estén dentro de la fecha de vencimiento y el frasco bien cerrado. La humedad deteriora las tiras.</li>
+            <li>Realizar el control de calidad con soluciones Chek-Stix positivo y negativo al inicio de cada jornada. No omitir este paso.</li>
+            <li>La muestra de orina debe ser fresca (menos de 2 horas desde la recolección) o refrigerada. Mezclar suavemente antes de procesar.</li>
+            <li>Sumergir la tira en la orina por exactamente 1 segundo y retirarla pasando el borde por el frasco para eliminar exceso. No sacudir.</li>
+            <li>Colocar la tira en la plataforma del lector con las almohadillas hacia arriba y sin doblar. El equipo lee automáticamente en 60 segundos.</li>
+            <li>Limpiar la plataforma de lectura con paño húmedo al final de la jornada. No usar solventes ni objetos abrasivos sobre la superficie óptica.</li>
+          </ol>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /tab-guia -->
+
+  <!-- TAB TELÉFONOS -->
+  <div id="tab-telefonos" class="tab-panel" style="display:none">
+    <div style="max-width:780px;margin:0 auto;padding:0.5rem 0;">
+      <div class="tarjetas-header" style="margin-bottom:1.5rem;">
+        <h3>
+          <span class="titulo-turno">
+            <span class="titulo-linea">Directorio</span>
+            <span class="titulo-destacado">Contactos</span>
+          </span>
+        </h3>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- Grupo TGU -->
+        <div>
+          <div class="tel-group-label">Tegucigalpa</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Harol Ortez</div>
+                <div class="tel-cargo">Ingeniero — Técnico de Turno TGU</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50432807355" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50432807355" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Yesther Amaya</div>
+                <div class="tel-cargo">Técnico Biomedical — Alterno TGU</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50431794995" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50431794995" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo SPS -->
+        <div>
+          <div class="tel-group-label">San Pedro Sula</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Luis Romero</div>
+                <div class="tel-cargo">Técnico Biomedical — Turno SPS</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50400000000" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50400000000" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Jorge Maldonado</div>
+                <div class="tel-cargo">Ing. Biomédico — Alterno SPS</div>
+              </div>
+              <div class="tel-btns">
+                <a href="https://wa.me/50488790267" target="_blank" class="tel-btn tel-btn-wa" title="WhatsApp">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+                </a>
+                <a href="tel:+50488790267" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grupo Administrativo -->
+        <div>
+          <div class="tel-group-label">Administrativo</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="tel-card">
+              <div class="tel-info">
+                <div class="tel-nombre">Gerencia</div>
+                <div class="tel-cargo">Analítica Hondureña — Dirección General</div>
+              </div>
+              <div class="tel-btns">
+                <a href="tel:+50422000000" class="tel-btn tel-btn-call" title="Llamar">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="var(--blue-600)"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /tab-telefonos -->
+
   </div>
 </div>
 
@@ -794,6 +1112,19 @@ function logout(){
 
 /* TARJETAS */
 function initials(name){ return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+function actionBtnsHTML(tel){
+  const digits = tel.replace(/\D/g,'');
+  return `<div class="tarjeta-action-btns">
+    <a href="https://wa.me/${digits}" target="_blank" rel="noopener" class="btn-whatsapp">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20.52 3.48A11.94 11.94 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.17 1.6 5.97L0 24l6.22-1.57A11.96 11.96 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.22-3.48-8.52zM12 22c-1.85 0-3.66-.5-5.24-1.44l-.38-.22-3.69.93.97-3.6-.25-.39A9.96 9.96 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.47-7.34c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.27-.47-2.42-1.49-.89-.8-1.5-1.78-1.67-2.08-.18-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.22 3.07c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.19-.57-.34z" fill="#25D366"/></svg>
+      WhatsApp
+    </a>
+    <a href="tel:${digits}" class="btn-llamar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.85)"/></svg>
+      Llamar
+    </a>
+  </div>`;
+}
 
 
 
@@ -831,17 +1162,11 @@ function renderTarjetas(){
     return `<div class="tarjeta-tecnico" style="animation-delay:${i*0.06}s">
       <div class="tarjeta-izq">
         <div>
-          <div class="tarjeta-label">Técnico de Turno</div>
-          <div class="tarjeta-nombre">${t.nombre}</div>
-          <div class="tarjeta-cargo">${t.cargo}</div>
-          <div class="tarjeta-telefono">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
-            <span>${t.telefono}</span>
-          </div>
+
+
         </div>
         <div>
-          <div class="tarjeta-web">${t.web}</div>
-          <div class="tarjeta-slogan">${t.slogan}</div>
+          ${actionBtnsHTML(t.telefono)}
         </div>
       </div>
       <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
@@ -919,8 +1244,10 @@ let sps_tempFoto = null;
 function switchTab(tab, btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('tab-tgu').style.display = tab==='tgu'?'block':'none';
-  document.getElementById('tab-sps').style.display = tab==='sps'?'block':'none';
+  document.getElementById('tab-tgu').style.display        = tab==='tgu'       ?'block':'none';
+  document.getElementById('tab-sps').style.display        = tab==='sps'       ?'block':'none';
+  document.getElementById('tab-guia').style.display       = tab==='guia'      ?'block':'none';
+  document.getElementById('tab-telefonos').style.display  = tab==='telefonos' ?'block':'none';
   if(tab==='sps') renderTarjetasSps();
 }
 
@@ -943,17 +1270,11 @@ function renderTarjetasSps(){
     return `<div class="tarjeta-tecnico" style="animation-delay:${i*0.06}s">
       <div class="tarjeta-izq">
         <div>
-          <div class="tarjeta-label">Técnico de Turno</div>
-          <div class="tarjeta-nombre sps-nombre-el">${t.nombre}</div>
-          <div class="tarjeta-cargo sps-cargo-el">${t.cargo}</div>
-          <div class="tarjeta-telefono">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
-            <span class="sps-tel-el">${t.telefono}</span>
-          </div>
+
+
         </div>
         <div>
-          <div class="tarjeta-web">${t.web}</div>
-          <div class="tarjeta-slogan">${t.slogan}</div>
+          ${actionBtnsHTML(t.telefono)}
         </div>
       </div>
       <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
@@ -1054,17 +1375,11 @@ function renderTarjetasAlt(){
     return `<div class="tarjeta-tecnico tarjeta-alt" style="animation-delay:${i*0.06}s">
       <div class="tarjeta-izq tarjeta-izq-alt">
         <div>
-          <div class="tarjeta-label">Técnico Alterno</div>
-          <div class="tarjeta-nombre alt-nombre-el">${t.nombre}</div>
-          <div class="tarjeta-cargo alt-cargo-el">${t.cargo}</div>
-          <div class="tarjeta-telefono">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
-            <span class="alt-tel-el">${t.telefono}</span>
-          </div>
+
+
         </div>
         <div>
-          <div class="tarjeta-web">${t.web}</div>
-          <div class="tarjeta-slogan">${t.slogan}</div>
+          ${actionBtnsHTML(t.telefono)}
         </div>
       </div>
       <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
@@ -1155,17 +1470,11 @@ function renderTarjetasSpsAlt(){
     return `<div class="tarjeta-tecnico tarjeta-alt" style="animation-delay:${i*0.06}s">
       <div class="tarjeta-izq tarjeta-izq-alt">
         <div>
-          <div class="tarjeta-label">Técnico Alterno</div>
-          <div class="tarjeta-nombre spsalt-nombre-el">${t.nombre}</div>
-          <div class="tarjeta-cargo spsalt-cargo-el">${t.cargo}</div>
-          <div class="tarjeta-telefono">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
-            <span class="spsalt-tel-el">${t.telefono}</span>
-          </div>
+
+
         </div>
         <div>
-          <div class="tarjeta-web">${t.web}</div>
-          <div class="tarjeta-slogan">${t.slogan}</div>
+          ${actionBtnsHTML(t.telefono)}
         </div>
       </div>
       <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
@@ -1229,6 +1538,15 @@ function cancelEditSpsAlt(){
   renderTarjetasSpsAlt();
 }
 
+
+/* GUÍA FILTRO */
+function filtrarGuia(equipo, btn){
+  document.querySelectorAll('.guia-filtro').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#guia-lista .guia-card').forEach(card=>{
+    card.style.display = (equipo==='todos' || card.dataset.equipo===equipo) ? 'block' : 'none';
+  });
+}
 
 /* RELOJ */
 function updateClock(){
