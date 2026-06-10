@@ -53,12 +53,17 @@
 [data-theme="dark"] .clock-time { color:#93c5fd; }
 [data-theme="dark"] .clock-date { color:#64748b; }
 [data-theme="dark"] .btn-logout { background:rgba(163,45,45,0.2); color:#fca5a5; border-color:rgba(163,45,45,0.3); }
-[data-theme="dark"] .guia-card { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.15); color:#e2e8f0; }
-[data-theme="dark"] .guia-card h4 { color:#93c5fd; }
-[data-theme="dark"] .guia-steps li { color:#cbd5e1; }
+[data-theme="dark"] .guia-card { background:rgba(12,24,48,0.95); box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+[data-theme="dark"] .guia-card:hover { box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+[data-theme="dark"] .guia-steps li { color:#cbd5e1; border-bottom-color:rgba(96,165,250,0.08); }
+[data-theme="dark"] .guia-steps li:hover { background:rgba(96,165,250,0.06); }
+[data-theme="dark"] .guia-steps li:nth-child(even) { background:rgba(96,165,250,0.04); }
 [data-theme="dark"] .guia-steps li em { color:#93c5fd; }
-[data-theme="dark"] .guia-filtro { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.2); color:#94a3b8; }
-[data-theme="dark"] .guia-filtro:hover { border-color:#60a5fa; color:#60a5fa; }
+[data-theme="dark"] .guia-filtro { background:rgba(12,24,48,0.8); border-color:rgba(96,165,250,0.2); color:#94a3b8; }
+[data-theme="dark"] .guia-filtro:hover { border-color:#60a5fa; color:#60a5fa; background:rgba(96,165,250,0.08); }
+[data-theme="dark"] .guia-filtro.active { background:linear-gradient(135deg,#0C447C,#185FA5); color:#fff; }
+[data-theme="dark"] .guia-pdf-btn { border-color:rgba(96,165,250,0.3); color:#93c5fd; }
+[data-theme="dark"] .guia-pdf-btn:hover { background:#185FA5; color:#fff; }
 
 /* DARK TOGGLE BUTTON */
 .btn-dark-toggle {
@@ -390,40 +395,102 @@ footer strong { color:rgba(255,255,255,0.7); }
 .btn-llamar:hover { background:rgba(255,255,255,0.22); transform:translateY(-1px); box-shadow:0 4px 16px rgba(255,255,255,0.15); }
 
 /* GUÍA RÁPIDA */
+/* ── GUÍA RÁPIDA ── */
 .guia-card {
-  background:#fff; border:1px solid rgba(12,68,124,0.1);
-  border-radius:14px; overflow:hidden;
-  box-shadow:0 2px 10px rgba(12,68,124,0.06);
+  background:#fff;
+  border:none;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 4px 20px rgba(12,68,124,0.10), 0 1px 4px rgba(12,68,124,0.06);
+  transition:box-shadow 0.2s, transform 0.2s;
+}
+.guia-card:hover {
+  box-shadow:0 8px 32px rgba(12,68,124,0.16);
+  transform:translateY(-2px);
 }
 .guia-card-header {
   display:flex; align-items:center; gap:12px;
-  background:linear-gradient(135deg,#042C53,#185FA5);
-  padding:0.85rem 1.25rem;
+  background:linear-gradient(120deg,#042C53 0%,#0C447C 60%,#185FA5 100%);
+  padding:1rem 1.4rem;
+  position:relative;
+  overflow:hidden;
+}
+.guia-card-header::after {
+  content:''; position:absolute; right:-20px; top:-20px;
+  width:80px; height:80px;
+  background:rgba(255,255,255,0.05);
+  border-radius:50%;
+}
+.guia-badge {
+  font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:0.1em;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  color:#fff; border-radius:20px;
+  padding:3px 10px; white-space:nowrap; flex-shrink:0;
+  backdrop-filter:blur(4px);
 }
 .guia-titulo {
-  font-size:0.95rem; font-weight:700; color:#fff; letter-spacing:0.01em;
+  font-size:0.97rem; font-weight:700; color:#fff; letter-spacing:0.01em;
 }
 .guia-steps {
-  padding:1rem 1.25rem 1rem 2.5rem;
-  display:flex; flex-direction:column; gap:6px;
+  padding:0;
+  display:flex; flex-direction:column; gap:0;
+  list-style:none;
+  counter-reset:paso;
 }
 .guia-steps li {
-  font-size:0.85rem; color:var(--gray-800); line-height:1.55;
-  padding-left:4px;
+  font-size:0.875rem; color:var(--gray-800); line-height:1.6;
+  padding:0.75rem 1.4rem 0.75rem 3.5rem;
+  position:relative;
+  border-bottom:1px solid rgba(12,68,124,0.06);
+  transition:background 0.15s;
+  counter-increment:paso;
 }
+.guia-steps li:last-child { border-bottom:none; }
+.guia-steps li:hover { background:rgba(24,95,165,0.04); }
+.guia-steps li::before {
+  content:counter(paso);
+  position:absolute; left:1.1rem; top:50%; transform:translateY(-50%);
+  width:22px; height:22px;
+  background:linear-gradient(135deg,#185FA5,#0C447C);
+  color:#fff; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:0.7rem; font-weight:800;
+  flex-shrink:0;
+  line-height:22px; text-align:center;
+}
+.guia-steps li:nth-child(even) { background:rgba(24,95,165,0.025); }
+.guia-steps li:nth-child(even):hover { background:rgba(24,95,165,0.06); }
+.guia-steps li em { color:var(--blue-600); font-style:italic; font-weight:600; }
+
+/* Filtros */
 .guia-filtro {
-  font-size:0.75rem; font-weight:600; padding:5px 12px;
-  border-radius:20px; border:1px solid var(--gray-100);
+  font-size:0.75rem; font-weight:600; padding:6px 14px;
+  border-radius:20px; border:1.5px solid var(--gray-100);
   background:#fff; color:var(--gray-600); cursor:pointer;
   transition:all 0.15s;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
 }
-.guia-filtro:hover { border-color:var(--blue-600); color:var(--blue-600); }
-.guia-filtro.active { background:var(--blue-800); color:#fff; border-color:var(--blue-800); }
-.guia-badge {
-  font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
-  background:rgba(255,255,255,0.18); color:#fff; border-radius:20px;
-  padding:3px 10px; white-space:nowrap; flex-shrink:0;
+.guia-filtro:hover { border-color:var(--blue-600); color:var(--blue-600); background:#f0f6ff; }
+.guia-filtro.active {
+  background:linear-gradient(135deg,#0C447C,#185FA5);
+  color:#fff; border-color:transparent;
+  box-shadow:0 2px 8px rgba(12,68,124,0.3);
 }
+
+/* Botones PDF */
+.guia-pdf-btn {
+  font-size:0.7rem; font-weight:600; padding:4px 11px;
+  border-radius:6px; border:1.5px solid rgba(24,95,165,0.4);
+  background:transparent; color:var(--blue-600); cursor:pointer;
+  transition:all .15s;
+}
+.guia-pdf-btn:hover { background:var(--blue-600); color:#fff; border-color:var(--blue-600); }
+.guia-pdf-todos {
+  border-color:var(--blue-800); color:var(--blue-800); font-weight:700;
+  background:rgba(12,68,124,0.04);
+}
+.guia-pdf-todos:hover { background:var(--blue-800); color:#fff; }
 
 /* TELÉFONOS */
 .tel-group-label {
@@ -605,6 +672,7 @@ footer strong { color:rgba(255,255,255,0.7); }
   white-space:nowrap;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -890,6 +958,14 @@ footer strong { color:rgba(255,255,255,0.7); }
         </h3>
       </div>
 
+      <!-- Buscador de texto -->
+      <div style="margin-bottom:1rem;position:relative;">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="guia-buscar" type="text" placeholder="Buscar..."
+          oninput="buscarGuia()"
+          style="width:100%;box-sizing:border-box;padding:10px 12px 10px 36px;border-radius:10px;border:1.5px solid rgba(96,165,250,0.35);background:rgba(255,255,255,0.7);font-size:0.92rem;outline:none;color:inherit;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--blue-600)'" onblur="this.style.borderColor='rgba(96,165,250,0.35)'"></div>
+
       <!-- Filtro por equipo -->
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;">
         <button class="guia-filtro active" onclick="filtrarGuia('todos',this)">Todos</button>
@@ -900,7 +976,19 @@ footer strong { color:rgba(255,255,255,0.7); }
         <button class="guia-filtro" onclick="filtrarGuia('atellica',this)">Atellica 1500</button>
         <button class="guia-filtro" onclick="filtrarGuia('clinitek',this)">Clinitek Advantus</button>
       </div>
+      <!-- Botones de descarga PDF por equipo -->
+      <div id="guia-pdf-btns" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem;align-items:center;padding:10px 14px;background:rgba(24,95,165,0.05);border-radius:12px;border:1px solid rgba(24,95,165,0.1);">
+        <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;opacity:0.5;margin-right:4px;">&#8615; PDF:</span>
+        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('bc6200','Mindray BC-6200')">BC-6200</button>
+        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('siemens','Siemens CA-660')">CA-660</button>
+        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('exl200','EXL 200')">EXL 200</button>
+        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('rp500','RapidPoint 500')">RapidPoint 500</button>
+        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('atellica','Atellica 1500')">Atellica 1500</button>
+        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('clinitek','Clinitek Advantus')">Clinitek Advantus</button>
+        <button class="guia-pdf-btn guia-pdf-todos" onclick="descargarGuiaPDF('todos','Todos los equipos')">Todos</button>
+      </div>
 
+      <div id="guia-sin-resultados" style="display:none;text-align:center;padding:2rem;opacity:0.5;font-size:0.9rem;">Sin resultados</div>
       <div style="display:flex;flex-direction:column;gap:12px;" id="guia-lista">
 
         <!-- BC-6200 -->
@@ -1015,7 +1103,17 @@ footer strong { color:rgba(255,255,255,0.7); }
         </h3>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:20px;">
+      <!-- BUSCADOR -->
+      <div style="margin-bottom:1.25rem;position:relative;">
+        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <input id="tel-buscar" type="text" placeholder="Buscar por nombre o cargo…"
+          oninput="filtrarTelefonos()"
+          style="width:100%;box-sizing:border-box;padding:10px 12px 10px 36px;border-radius:10px;border:1.5px solid rgba(96,165,250,0.35);background:rgba(255,255,255,0.7);font-size:0.92rem;outline:none;color:inherit;transition:border-color .2s;"
+          onfocus="this.style.borderColor='var(--blue-600)'" onblur="this.style.borderColor='rgba(96,165,250,0.35)'">
+      </div>
+      <div id="tel-sin-resultados" style="display:none;text-align:center;padding:2rem;opacity:0.5;font-size:0.9rem;">Sin resultados</div>
+
+      <div id="tel-lista" style="display:flex;flex-direction:column;gap:20px;">
 
         <!-- Grupo TGU -->
         <div>
@@ -1511,6 +1609,246 @@ const TARJETAS_DATA_SPS = [
 const tarjetasImagenesSps = {};
 let sps_tempFoto = null;
 
+function descargarGuiaPDF(equipoFiltro, equipoNombre){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:'mm', format:'a4' });
+  const W = 210, H = 297;
+  const ML = 14, MR = 14, CW = W - ML - MR;
+
+  // Paleta
+  const C = {
+    azulOsc:  [8,  44, 83],
+    azulMed:  [24, 95, 165],
+    azulClar: [66, 133, 211],
+    azulBg:   [235, 244, 255],
+    blanco:   [255,255,255],
+    negro:    [30, 30, 30],
+    grisText: [100,100,100],
+    grisLinea:[210,215,225],
+    filaPar:  [246,249,253],
+  };
+
+  // ── Logo marca de agua ──
+  const LOGO_B64 = ''; // <-- PEGA AQUÍ base64 del PNG
+
+  // Utilidad: limpiar texto HTML (quita tags, normaliza espacios)
+  function limpiarTexto(el){
+    return (el.innerText || el.textContent || '').replace(/\s+/g,' ').trim();
+  }
+
+  function dibujarPagina(){
+    // Header azul oscuro
+    doc.setFillColor(...C.azulOsc);
+    doc.rect(0, 0, W, 20, 'F');
+    // Franja inferior del header
+    doc.setFillColor(...C.azulMed);
+    doc.rect(0, 16, W, 4, 'F');
+    // Textos header
+    doc.setTextColor(...C.blanco);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9.5);
+    doc.text('ANALÍTICA HONDUREÑA  S. de R.L. de C.V.', W/2, 9.5, {align:'center'});
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7);
+    doc.text('Departamento Técnico  —  Documento de Uso Interno', W/2, 15, {align:'center'});
+
+    // Marca de agua
+    doc.saveGraphicsState();
+    if(LOGO_B64){
+      doc.setGState(new doc.GState({opacity:0.04}));
+      doc.addImage(LOGO_B64,'PNG', W/2-25, H/2-25, 50, 50);
+    } else {
+      doc.setGState(new doc.GState({opacity:0.04}));
+      doc.setTextColor(0,60,120);
+      doc.setFontSize(44);
+      doc.setFont('helvetica','bold');
+      doc.text('ANALÍTICA', W/2, H/2-5, {align:'center', angle:30});
+      doc.text('HONDUREÑA', W/2, H/2+16, {align:'center', angle:30});
+    }
+    doc.restoreGraphicsState();
+
+    // Footer
+    doc.setFillColor(...C.azulOsc);
+    doc.rect(0, H-11, W, 11, 'F');
+    doc.setTextColor(...C.blanco);
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(7);
+    const fecha = new Date().toLocaleDateString('es-HN',{day:'2-digit',month:'long',year:'numeric'});
+    doc.text('Analítica Hondureña — Uso interno', ML, H-4);
+    doc.text('Generado: '+fecha, W/2, H-4, {align:'center'});
+    // Página se actualiza al final
+  }
+
+  // Recolectar tarjetas
+  const cards = Array.from(document.querySelectorAll('#guia-lista .guia-card'))
+    .filter(c => equipoFiltro==='todos' || c.getAttribute('data-equipo')===equipoFiltro);
+
+  // ── Primera pasada: estimar total páginas ──
+  let yEst = 46, pagesEst = 1;
+  const YBOTTOM = H - 16;
+  cards.forEach(card => {
+    const steps = card.querySelectorAll('.guia-steps li');
+    let h = 14; // cabecera tarjeta
+    steps.forEach(li => {
+      const txt = limpiarTexto(li);
+      h += doc.splitTextToSize(txt, CW - 14).length * 5.2 + 3.5;
+    });
+    h += 6;
+    if(yEst + h > YBOTTOM){ pagesEst++; yEst = 34; }
+    yEst += h;
+  });
+
+  // ── Dibujar ──
+  let pageNum = 1;
+  dibujarPagina();
+
+  // Título principal
+  let y = 28;
+  doc.setFillColor(...C.azulBg);
+  doc.roundedRect(ML, y-5, CW, 13, 2, 2, 'F');
+  doc.setTextColor(...C.azulOsc);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(14);
+  const tituloDoc = equipoFiltro==='todos' ? 'Guía Rápida — Todos los Equipos' : 'Guía Rápida — '+equipoNombre;
+  doc.text(tituloDoc, ML+4, y+3.5);
+  y += 14;
+
+  // Processar tarjetas
+  cards.forEach(card => {
+    const tituloEl = card.querySelector('.guia-titulo');
+    const badgeEl  = card.querySelector('.guia-badge');
+    const steps    = card.querySelectorAll('.guia-steps li');
+
+    // Calcular altura del bloque completo
+    let hBloque = 14;
+    const stepLines = [];
+    steps.forEach(li => {
+      const txt = limpiarTexto(li);
+      const lineas = doc.splitTextToSize(txt, CW - 14);
+      stepLines.push(lineas);
+      hBloque += lineas.length * 5.2 + 3.5;
+    });
+    hBloque += 4;
+
+    // Salto de página si no cabe
+    if(y + hBloque > YBOTTOM){
+      // Número de página al footer
+      doc.setPage(pageNum);
+      doc.setFillColor(...C.azulOsc);
+      doc.rect(W-30, H-11, 30, 11, 'F');
+      doc.setTextColor(...C.blanco);
+      doc.setFontSize(7);
+      doc.text('Pág. '+pageNum+' / '+pagesEst, W-MR, H-4, {align:'right'});
+
+      pageNum++;
+      doc.addPage();
+      dibujarPagina();
+      y = 34;
+    }
+
+    // ── Cabecera de tarjeta ──
+    doc.setFillColor(...C.azulMed);
+    doc.roundedRect(ML, y, CW, 11, 2, 2, 'F');
+
+    // Badge
+    const badge = badgeEl ? limpiarTexto(badgeEl).toUpperCase() : '';
+    doc.setFillColor(...C.blanco);
+    doc.setTextColor(...C.azulMed);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(6.5);
+    const bw = doc.getTextWidth(badge) + 6;
+    doc.roundedRect(ML+3, y+2.5, bw, 5, 1.5, 1.5, 'F');
+    doc.text(badge, ML+6, y+6.5);
+
+    // Título equipo
+    doc.setTextColor(...C.blanco);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    const titEquipo = tituloEl ? limpiarTexto(tituloEl) : '';
+    doc.text(titEquipo, ML+bw+8, y+6.8);
+    y += 13;
+
+    // ── Pasos ──
+    stepLines.forEach((lineas, idx) => {
+      const hFila = lineas.length * 5.2 + 3.5;
+
+      // Fondo alterno
+      doc.setFillColor(...(idx%2===0 ? C.filaPar : C.blanco));
+      doc.rect(ML, y-0.5, CW, hFila+0.5, 'F');
+
+      // Círculo con número
+      doc.setFillColor(...C.azulClar);
+      doc.circle(ML+6, y + hFila/2 - 0.5, 3, 'F');
+      doc.setTextColor(...C.blanco);
+      doc.setFont('helvetica','bold');
+      doc.setFontSize(7);
+      doc.text(String(idx+1), ML+6, y + hFila/2 + 0.8, {align:'center'});
+
+      // Texto (sin cursiva, fuente normal)
+      doc.setTextColor(...C.negro);
+      doc.setFont('helvetica','normal');
+      doc.setFontSize(8.5);
+      doc.text(lineas, ML+13, y + 4);
+      y += hFila;
+    });
+
+    // Borde inferior de tarjeta
+    doc.setDrawColor(...C.azulClar);
+    doc.setLineWidth(0.4);
+    doc.line(ML, y+1, ML+CW, y+1);
+    y += 7;
+  });
+
+  // Número de última página
+  doc.setPage(pageNum);
+  doc.setFillColor(...C.azulOsc);
+  doc.rect(W-30, H-11, 30, 11, 'F');
+  doc.setTextColor(...C.blanco);
+  doc.setFontSize(7);
+  doc.text('Pág. '+pageNum+' / '+pagesEst, W-MR, H-4, {align:'right'});
+
+  const nombreArchivo = 'Guia_'+(equipoFiltro==='todos'?'Todos':equipoNombre.replace(/ /g,'_'))+'.pdf';
+  doc.save(nombreArchivo);
+}
+
+function buscarGuia(){
+  const q = document.getElementById("guia-buscar").value.trim().toLowerCase();
+  const cards = document.querySelectorAll("#guia-lista .guia-card");
+  let visibles = 0;
+  cards.forEach(card => {
+    const equipo = card.getAttribute("data-equipo");
+    const texto  = card.innerText.toLowerCase();
+    const filtroActivo = document.querySelector(".guia-filtro.active");
+    const filtroVal = filtroActivo ? filtroActivo.getAttribute("onclick").match(/filtrarGuia\('([^']+)/)?.[1] : "todos";
+    const equipoOk = !filtroVal || filtroVal === "todos" || equipo === filtroVal;
+    const textoOk  = !q || texto.includes(q);
+    const mostrar  = equipoOk && textoOk;
+    card.style.display = mostrar ? "" : "none";
+    if (mostrar) visibles++;
+  });
+  document.getElementById("guia-sin-resultados").style.display = visibles === 0 ? "block" : "none";
+}
+
+function filtrarTelefonos(){
+  const q = document.getElementById('tel-buscar').value.trim().toLowerCase();
+  const grupos = document.querySelectorAll('#tel-lista > div');
+  let totalVisibles = 0;
+  grupos.forEach(grupo => {
+    const cards = grupo.querySelectorAll('.tel-card');
+    let visiblesEnGrupo = 0;
+    cards.forEach(card => {
+      const texto = card.innerText.toLowerCase();
+      const mostrar = !q || texto.includes(q);
+      card.style.display = mostrar ? '' : 'none';
+      if (mostrar) visiblesEnGrupo++;
+    });
+    // Ocultar grupo completo si no tiene resultados
+    grupo.style.display = visiblesEnGrupo === 0 ? 'none' : '';
+    totalVisibles += visiblesEnGrupo;
+  });
+  document.getElementById('tel-sin-resultados').style.display = totalVisibles === 0 ? 'block' : 'none';
+}
+
 function switchTab(tab, btn){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
@@ -1519,6 +1857,7 @@ function switchTab(tab, btn){
   document.getElementById('tab-guia').style.display       = tab==='guia'      ?'block':'none';
   document.getElementById('tab-telefonos').style.display  = tab==='telefonos' ?'block':'none';
   if(tab==='sps') renderTarjetasSps();
+  if(tab!=='telefonos'){ var b=document.getElementById('tel-buscar'); if(b){b.value=''; filtrarTelefonos();} }
 }
 
 function renderTarjetasSps(){
@@ -1811,11 +2150,13 @@ function cancelEditSpsAlt(){
 
 /* GUÍA FILTRO */
 function filtrarGuia(equipo, btn){
-  document.querySelectorAll('.guia-filtro').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('#guia-lista .guia-card').forEach(card=>{
-    card.style.display = (equipo==='todos' || card.dataset.equipo===equipo) ? 'block' : 'none';
+  document.querySelectorAll(".guia-filtro").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  var b=document.getElementById("guia-buscar"); if(b) b.value="";
+  document.querySelectorAll("#guia-lista .guia-card").forEach(card=>{
+    card.style.display = (equipo==="todos" || card.dataset.equipo===equipo) ? "block" : "none";
   });
+  var sr=document.getElementById("guia-sin-resultados"); if(sr) sr.style.display="none";
 }
 
 /* RELOJ */
