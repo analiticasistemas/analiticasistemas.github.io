@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turnos Operativos — Dpto. Técnico</title>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --blue-50:#E6F1FB; --blue-100:#B5D4F4; --blue-600:#185FA5;
+  --blue-800:#0C447C; --blue-900:#042C53;
+  --gray-50:#F1EFE8; --gray-100:#D3D1C7; --gray-200:#B4B2A9;
+  --gray-600:#5F5E5A; --gray-800:#444441; --gray-900:#2C2C2A;
+  --teal-50:#E1F5EE; --teal-600:#0F6E56; --teal-800:#085041;
+  --red-50:#FCEBEB; --red-600:#A32D2D;
+  --green-600:#3B6D11; --green-50:#EAF3DE;
+  --purple-50:#EEEDFE; --purple-800:#3C3489;
+  --amber-50:#FAEEDA; --amber-800:#633806;
+}
+#particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+body {
+  font-family:'Segoe UI',system-ui,sans-serif;
+  background:linear-gradient(135deg,#0a1628 0%,#0c2444 40%,#0a3060 100%);
+  color:var(--gray-900); min-height:100vh;
+  display:flex; flex-direction:column; position:relative; overflow-x:hidden;
+}
+header {
+  background:rgba(4,44,83,0.88); backdrop-filter:blur(12px);
+  color:#fff; padding:1rem 2rem;
+  display:flex; align-items:center; gap:12px;
+  border-bottom:1px solid rgba(21,95,165,0.4);
+  position:relative; z-index:10;
+  animation:slideDown 0.5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes slideDown { from{transform:translateY(-100%);opacity:0} to{transform:translateY(0);opacity:1} }
+.header-logo {
+  width:40px; height:40px; border-radius:10px;
+  background:linear-gradient(135deg,#185FA5,#0C447C);
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(255,255,255,0.15); flex-shrink:0;
+  animation:spinIn 0.6s cubic-bezier(.34,1.56,.64,1) 0.3s both;
+}
+@keyframes spinIn { from{transform:rotate(-180deg) scale(0);opacity:0} to{transform:rotate(0) scale(1);opacity:1} }
+header h1 { font-size:1.1rem; font-weight:600; letter-spacing:0.01em; }
+header p  { font-size:0.78rem; opacity:0.6; margin-top:2px; }
+.pulse-dot {
+  width:8px; height:8px; border-radius:50%; background:#4ade80;
+  display:inline-block; margin-left:8px;
+  animation:pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.6)}
+  50%{box-shadow:0 0 0 6px rgba(74,222,128,0)}
+}
+/* LOCK SCREEN */
+#lock-screen {
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:2rem; position:relative; z-index:5;
+}
+.lock-card {
+  background:rgba(255,255,255,0.07);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:20px; padding:2.5rem 2rem;
+  max-width:400px; width:100%; text-align:center;
+  animation:fadeUp 0.6s cubic-bezier(.22,1,.36,1) both;
+  position:relative; overflow:hidden;
+}
+@keyframes fadeUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+.lock-card::before {
+  content:''; position:absolute; top:-50%; left:-50%;
+  width:200%; height:200%;
+  background:conic-gradient(from 0deg,transparent 0deg,rgba(24,95,165,0.08) 60deg,transparent 120deg);
+  animation:rotateBg 8s linear infinite; pointer-events:none;
+}
+@keyframes rotateBg { to{transform:rotate(360deg)} }
+.lock-icon {
+  width:72px; height:72px; border-radius:50%;
+  background:linear-gradient(135deg,rgba(21,95,165,0.3),rgba(4,44,83,0.5));
+  border:1px solid rgba(255,255,255,0.2);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 1.5rem;
+  animation:lockBounce 0.8s cubic-bezier(.34,1.56,.64,1) 0.4s both;
+  position:relative; z-index:1;
+}
+@keyframes lockBounce { from{transform:scale(0) rotate(-20deg)} to{transform:scale(1) rotate(0)} }
+.lock-icon svg { filter:drop-shadow(0 0 8px rgba(21,95,165,0.8)); }
+.lock-card h2 {
+  font-size:1.3rem; font-weight:700; color:#fff; margin-bottom:0.4rem;
+  position:relative; z-index:1; text-shadow:0 0 20px rgba(21,95,165,0.5);
+}
+.lock-card > p {
+  font-size:0.83rem; color:rgba(255,255,255,0.55);
+  margin-bottom:1.75rem; line-height:1.6; position:relative; z-index:1;
+}
+#code-input {
+  width:100%; padding:0.8rem 1rem;
+  font-size:1.2rem; letter-spacing:0.25em;
+  text-align:center; text-transform:uppercase;
+  border:1px solid rgba(255,255,255,0.2); border-radius:10px; outline:none;
+  background:rgba(255,255,255,0.06); color:#fff;
+  font-family:'Courier New',monospace;
+  transition:border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  margin-bottom:1rem; position:relative; z-index:1;
+}
+#code-input::placeholder { color:rgba(255,255,255,0.3); letter-spacing:0.15em; }
+#code-input:focus {
+  border-color:rgba(21,95,165,0.8); background:rgba(21,95,165,0.12);
+  box-shadow:0 0 0 3px rgba(21,95,165,0.25),0 0 20px rgba(21,95,165,0.15);
+}
+#code-input.error {
+  border-color:#f87171; background:rgba(248,113,113,0.1);
+  box-shadow:0 0 0 3px rgba(248,113,113,0.2);
+  animation:shake 0.4s cubic-bezier(.36,.07,.19,.97);
+}
+@keyframes shake {
+  10%,90%{transform:translateX(-2px)}
+  20%,80%{transform:translateX(4px)}
+  30%,50%,70%{transform:translateX(-4px)}
+  40%,60%{transform:translateX(4px)}
+}
+#code-input.ok {
+  border-color:#4ade80; background:rgba(74,222,128,0.1);
+  box-shadow:0 0 0 3px rgba(74,222,128,0.2),0 0 20px rgba(74,222,128,0.15);
+}
+#error-msg {
+  font-size:0.8rem; color:#fca5a5; margin-bottom:0.75rem;
+  min-height:1.1em; display:none; position:relative; z-index:1;
+}
+.btn-primary {
+  width:100%; padding:0.8rem;
+  background:linear-gradient(135deg,#185FA5,#0C447C);
+  color:#fff; border:none; border-radius:10px;
+  font-size:0.92rem; font-weight:600; cursor:pointer;
+  letter-spacing:0.04em;
+  transition:transform 0.15s, filter 0.15s, box-shadow 0.15s;
+  position:relative; z-index:1;
+}
+.btn-primary:hover { transform:translateY(-1px); filter:brightness(1.1); box-shadow:0 6px 20px rgba(21,95,165,0.4); }
+.btn-primary:active { transform:scale(0.98); box-shadow:none; }
+.attempts-hint { font-size:0.75rem; color:rgba(255,255,255,0.3); margin-top:1rem; position:relative; z-index:1; }
+/* MAIN */
+#main-content { display:none; flex:1; flex-direction:column; position:relative; z-index:5; }
+#main-content.visible { animation:mainFadeIn 0.5s cubic-bezier(.22,1,.36,1) both; }
+@keyframes mainFadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.top-bar {
+  background:rgba(255,255,255,0.96); backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(12,68,124,0.12);
+  padding:0.75rem 2rem; display:flex; align-items:center;
+  justify-content:space-between; flex-wrap:wrap; gap:0.75rem;
+}
+.top-bar h2 { font-size:1rem; font-weight:600; color:var(--blue-800); }
+.top-bar-right { display:flex; align-items:center; gap:12px; }
+.session-badge {
+  font-size:0.75rem;
+  background:linear-gradient(135deg,#E1F5EE,#d1f0e5);
+  color:var(--teal-600); border:1px solid rgba(15,110,86,0.25);
+  padding:4px 12px; border-radius:20px; font-weight:600;
+  display:flex; align-items:center; gap:5px;
+}
+.btn-logout {
+  font-size:0.78rem; background:transparent; color:var(--gray-600);
+  border:1px solid var(--gray-200); padding:5px 14px;
+  border-radius:8px; cursor:pointer; transition:all 0.15s;
+}
+.btn-logout:hover { background:var(--red-50); color:var(--red-600); border-color:var(--red-600); }
+.content-area {
+  padding:1.5rem 2rem; max-width:1100px; width:100%; margin:0 auto;
+  background:rgba(241,239,232,0.96); min-height:calc(100vh - 130px);
+}
+/* TARJETAS */
+.tarjetas-header {
+  display:flex; flex-direction:column; align-items:center;
+  margin-bottom:1.5rem; gap:0.5rem; text-align:center;
+}
+.tarjetas-header h3 {
+  display:flex; align-items:center; justify-content:center; width:100%; text-align:center;
+}
+.titulo-turno {
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  position:relative;
+}
+.titulo-linea {
+  font-size:1rem; font-weight:600; letter-spacing:0.35em;
+  text-transform:uppercase; color:var(--blue-600);
+  animation:fadeSlideUp 0.7s cubic-bezier(.22,1,.36,1) both;
+}
+.titulo-destacado {
+  font-size:2.4rem; font-weight:900; letter-spacing:0.04em;
+  text-transform:uppercase;
+  background:linear-gradient(135deg,#042C53 0%,#185FA5 50%,#0C447C 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  position:relative;
+  animation:fadeSlideUp 0.7s cubic-bezier(.22,1,.36,1) 0.15s both;
+}
+.titulo-destacado::after {
+  content:'';
+  display:block; height:3px; border-radius:2px; margin-top:6px;
+  background:linear-gradient(90deg,transparent,#185FA5,transparent);
+  animation:lineGrow 0.8s cubic-bezier(.22,1,.36,1) 0.4s both;
+  transform-origin:center;
+}
+@keyframes fadeSlideUp {
+  from{opacity:0;transform:translateY(14px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes lineGrow {
+  from{transform:scaleX(0)}
+  to{transform:scaleX(1)}
+}
+
+.tarjetas-hint {
+  font-size:0.72rem; color:var(--gray-600);
+  background:var(--gray-50); border:1px solid var(--gray-100);
+  padding:3px 10px; border-radius:20px;
+}
+.tarjetas-grid {
+  display:grid;
+  grid-template-columns:1fr; max-width:680px; margin:0 auto;
+  gap:16px;
+}
+.tarjeta-tecnico {
+  background:#fff; border:1px solid rgba(12,68,124,0.1);
+  border-radius:16px; overflow:hidden;
+  display:flex; flex-direction:column; min-height:420px; position:relative;
+  transition:transform 0.2s, box-shadow 0.2s;
+  animation:statAppear 0.4s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes statAppear { from{opacity:0;transform:translateY(12px) scale(0.96)} to{opacity:1;transform:translateY(0) scale(1)} }
+.tarjeta-tecnico:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(12,68,124,0.14); }
+.tarjeta-izq {
+  background:linear-gradient(160deg,#042C53 0%,#0C447C 60%,#185FA5 100%);
+  padding:1.75rem 2rem;
+  display:flex; flex-direction:column; justify-content:space-between;
+  width:100%; position:relative; overflow:hidden;
+}
+.tarjeta-izq::before {
+  content:'+ + + + +\A+ + + + +\A+ + + + +';
+  white-space:pre; position:absolute; right:-8px; top:10px;
+  font-size:1.1rem; line-height:1.9;
+  color:rgba(255,255,255,0.07); letter-spacing:6px; pointer-events:none;
+}
+.tarjeta-label {
+  font-size:0.82rem; font-weight:600; color:rgba(255,255,255,0.55);
+  text-transform:uppercase; letter-spacing:0.12em; margin-bottom:6px;
+}
+.tarjeta-nombre {
+  font-size:1.8rem; font-weight:800; color:#fff;
+  line-height:1.15; text-transform:uppercase; letter-spacing:0.02em;
+}
+.tarjeta-cargo { font-size:1rem; color:rgba(255,255,255,0.65); font-style:italic; margin-top:4px; }
+.tarjeta-telefono {
+  display:flex; align-items:center; gap:8px;
+  background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);
+  border-radius:10px; padding:8px 16px; margin-top:14px; width:fit-content;
+}
+.tarjeta-telefono span { font-size:1.3rem; font-weight:700; color:#fff; font-family:'Courier New',monospace; letter-spacing:0.04em; }
+.tarjeta-web   { font-size:0.68rem; color:rgba(255,255,255,0.4); margin-top:6px; }
+.tarjeta-slogan { font-size:0.68rem; color:rgba(255,255,255,0.45); font-style:italic; margin-top:3px; }
+.tarjeta-der {
+  width:100%; height:260px; flex-shrink:0; position:relative; overflow:hidden;
+  background:linear-gradient(135deg,#e8f0f8 0%,#f0f5fc 100%);
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.tarjeta-der::before {
+  content:''; position:absolute; inset:0;
+  background-image:radial-gradient(circle,rgba(12,68,124,0.11) 1px,transparent 1px);
+  background-size:20px 20px; pointer-events:none;
+}
+.tarjeta-img { width:100%; height:100%; object-fit:cover; object-position:center top; position:relative; z-index:1; }
+/* btn agregar */
+.btn-add-tarjeta {
+  margin-top:1rem; display:flex; align-items:center; gap:6px;
+  background:#fff; border:1.5px dashed var(--gray-200);
+  color:var(--blue-800); padding:0.6rem 1.2rem;
+  border-radius:10px; cursor:pointer; font-size:0.82rem; font-weight:600;
+  transition:all 0.2s; width:fit-content;
+}
+.btn-add-tarjeta:hover { border-color:var(--blue-600); background:var(--blue-50); transform:translateY(-1px); }
+/* TOAST */
+#toast {
+  position:fixed; bottom:2rem; right:2rem;
+  background:rgba(4,44,83,0.95); backdrop-filter:blur(10px);
+  color:#fff; padding:0.75rem 1.25rem; border-radius:12px; font-size:0.85rem;
+  border:1px solid rgba(21,95,165,0.4); z-index:100; pointer-events:none;
+  transform:translateY(20px); opacity:0;
+  transition:transform 0.3s cubic-bezier(.22,1,.36,1), opacity 0.3s;
+}
+#toast.show { transform:translateY(0); opacity:1; }
+footer {
+  background:rgba(4,44,83,0.95); backdrop-filter:blur(10px);
+  color:rgba(255,255,255,0.4); text-align:center; font-size:0.72rem; padding:0.75rem;
+  position:relative; z-index:5; border-top:1px solid rgba(21,95,165,0.3);
+}
+footer strong { color:rgba(255,255,255,0.7); }
+@media(max-width:640px){
+  .content-area{padding:1rem;}
+  .top-bar{padding:0.75rem 1rem;}
+  header{padding:0.75rem 1rem;}
+  header h1{font-size:0.95rem;}
+  .tarjetas-grid{grid-template-columns:1fr;}
+  .tarjeta-der{height:200px;}
+}
+@media print {
+  #lock-screen,canvas,#toast{display:none!important;}
+  body{background:#fff;}
+  .content-area{background:#fff;}
+  .btn-logout{display:none!important;}
+}
+
+/* ROLE BADGES */
+.role-badge {
+  font-size:0.72rem; font-weight:600; padding:4px 10px;
+  border-radius:20px; letter-spacing:0.03em;
+}
+.role-it {
+  background:linear-gradient(135deg,#042C53,#185FA5);
+  color:#fff; border:none;
+}
+.role-view {
+  background:var(--gray-50); color:var(--gray-600);
+  border:1px solid var(--gray-200);
+}
+
+/* IT PANEL */
+.it-panel-card {
+  background:#fff; border:1px solid rgba(12,68,124,0.12);
+  border-radius:14px; padding:1.5rem;
+  box-shadow:0 2px 12px rgba(12,68,124,0.07);
+  animation:fadeUp 0.4s cubic-bezier(.22,1,.36,1) both;
+}
+.it-panel-title {
+  font-size:0.9rem; font-weight:700; color:var(--blue-800);
+  display:flex; align-items:center; gap:7px;
+  margin-bottom:1.25rem; padding-bottom:0.75rem;
+  border-bottom:1px solid var(--gray-50);
+}
+.it-fields {
+  display:grid; grid-template-columns:1fr 1fr; gap:1rem;
+  margin-bottom:1.25rem;
+}
+.it-field { display:flex; flex-direction:column; gap:5px; }
+.it-field label {
+  font-size:0.75rem; font-weight:600; color:var(--gray-600);
+  text-transform:uppercase; letter-spacing:0.06em;
+}
+.it-field input {
+  padding:0.55rem 0.85rem; border:1px solid var(--gray-100);
+  border-radius:8px; font-size:0.88rem; color:var(--gray-900);
+  background:var(--gray-50); outline:none;
+  transition:border-color 0.15s, background 0.15s;
+}
+.it-field input:focus { border-color:var(--blue-600); background:#fff; }
+.it-foto-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.it-btn-foto {
+  display:flex; align-items:center; gap:5px;
+  background:var(--blue-50); color:var(--blue-800);
+  border:1px solid var(--blue-100); border-radius:8px;
+  padding:6px 14px; font-size:0.8rem; font-weight:600;
+  cursor:pointer; transition:all 0.15s;
+}
+.it-btn-foto:hover { background:var(--blue-100); }
+.it-actions { display:flex; gap:10px; justify-content:flex-end; }
+.it-btn-save {
+  background:var(--blue-800); color:#fff; border:none;
+  border-radius:8px; padding:0.6rem 1.4rem;
+  font-size:0.88rem; font-weight:600; cursor:pointer;
+  transition:filter 0.15s, transform 0.1s;
+}
+.it-btn-save:hover { filter:brightness(1.1); transform:translateY(-1px); }
+.it-btn-cancel {
+  background:transparent; color:var(--gray-600);
+  border:1px solid var(--gray-200); border-radius:8px;
+  padding:0.6rem 1.2rem; font-size:0.88rem; cursor:pointer;
+  transition:all 0.15s;
+}
+.it-btn-cancel:hover { background:var(--gray-50); }
+@media(max-width:640px){ .it-fields{grid-template-columns:1fr;} }
+
+/* TABS */
+.tab-nav {
+  display:flex; gap:0; background:rgba(255,255,255,0.96);
+  border-bottom:1px solid rgba(12,68,124,0.12);
+  padding:0 2rem; position:relative; z-index:4;
+}
+.tab-btn {
+  display:flex; align-items:center; gap:7px;
+  padding:0.8rem 1.4rem; font-size:0.85rem; font-weight:600;
+  color:var(--gray-600); background:transparent; border:none;
+  border-bottom:3px solid transparent; cursor:pointer;
+  transition:color 0.15s, border-color 0.15s;
+  margin-bottom:-1px;
+}
+.tab-btn:hover { color:var(--blue-600); }
+.tab-btn.active { color:var(--blue-800); border-bottom-color:var(--blue-800); }
+
+.tarjeta-izq-alt {
+  background:linear-gradient(160deg,#26215C 0%,#3C3489 60%,#534AB7 100%) !important;
+}
+
+/* CLOCK */
+.clock-display {
+  display:flex; flex-direction:column; align-items:center;
+  background:linear-gradient(135deg,#042C53,#0C447C);
+  border:1px solid rgba(21,95,165,0.4);
+  border-radius:10px; padding:5px 14px; min-width:130px;
+}
+.clock-time {
+  font-family:'Courier New',monospace;
+  font-size:1.2rem; font-weight:700; color:#fff;
+  letter-spacing:0.1em; line-height:1.2;
+  text-shadow:0 0 10px rgba(100,160,255,0.5);
+  animation:clockPulse 1s ease-in-out infinite;
+}
+@keyframes clockPulse {
+  0%,100%{text-shadow:0 0 8px rgba(100,160,255,0.4);}
+  50%{text-shadow:0 0 16px rgba(100,160,255,0.8);}
+}
+.clock-date {
+  font-size:0.68rem; color:rgba(255,255,255,0.6);
+  letter-spacing:0.04em; text-transform:capitalize;
+  white-space:nowrap;
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+  <div class="header-logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      <rect x="9" y="3" width="6" height="4" rx="1" stroke="#fff" stroke-width="1.8"/>
+      <path d="M9 12h6M9 16h4" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div>
+    <h1>Analítica Hondureña — Dpto. Técnico <span class="pulse-dot"></span></h1>
+    <p>Sistema de Turnos Operativos</p>
+  </div>
+</header>
+
+<!-- LOCK -->
+<div id="lock-screen">
+  <div class="lock-card">
+    <div class="lock-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="10" rx="2" stroke="#60a5fa" stroke-width="1.8"/>
+        <path d="M8 11V7a4 4 0 018 0v4" stroke="#60a5fa" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="12" cy="16" r="1.5" fill="#60a5fa"/>
+      </svg>
+    </div>
+    <h2>Acceso Restringido</h2>
+    <p>Ingresa el código de acceso proporcionado<br>por el administrador del sistema.</p>
+    <input id="code-input" type="text" maxlength="8" placeholder="● ● ● ● ● ● ● ●"
+      autocomplete="off" spellcheck="false" aria-label="Código de acceso">
+    <div id="error-msg" role="alert">Código incorrecto. Verifica e intenta de nuevo.</div>
+    <button class="btn-primary" id="btn-enter" onclick="checkCode()">Verificar acceso</button>
+    <p class="attempts-hint" id="attempts-hint"></p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+  <div class="top-bar">
+    <h2>Turnos Operativos — Técnicos</h2>
+    <div class="top-bar-right">
+      <span class="session-badge">
+        <span class="pulse-dot" style="width:6px;height:6px;background:#4ade80;"></span>
+        <span id="session-name">—</span>
+      </span>
+      <div class="clock-display" id="clock-display">
+        <div class="clock-time" id="clock-time">00:00:00</div>
+        <div class="clock-date" id="clock-date">—</div>
+      </div>
+      <span id="role-badge" class="role-badge role-view">Solo lectura</span>
+      <button class="btn-logout" onclick="logout()">Cerrar sesión</button>
+    </div>
+  </div>
+  <!-- TABS -->
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('tgu',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Turno TGU
+    </button>
+    <button class="tab-btn" onclick="switchTab('sps',this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Turno San Pedro Sula
+    </button>
+  </div>
+  <div class="content-area">
+  <div id="tab-tgu" class="tab-panel">
+    <div class="tarjetas-header">
+      <h3>
+  <span class="titulo-turno">
+    <span class="titulo-linea">Técnico Actual</span>
+    <span class="titulo-destacado">de Turno</span>
+  </span>
+</h3>
+      
+    </div>
+    <div class="tarjetas-grid" id="tarjetas-grid"></div>
+
+    <!-- PANEL IT -->
+    <div id="it-panel" style="display:none; margin-top:1.75rem;">
+      <div class="it-panel-card">
+        <div class="it-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Editar Técnico de Turno
+        </div>
+        <div class="it-fields">
+          <div class="it-field">
+            <label>Nombre</label>
+            <input id="it-nombre" type="text" placeholder="Nombre completo" oninput="previewEdit()">
+          </div>
+          <div class="it-field">
+            <label>Cargo</label>
+            <input id="it-cargo" type="text" placeholder="Cargo" oninput="previewEdit()">
+          </div>
+          <div class="it-field">
+            <label>Teléfono</label>
+            <input id="it-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEdit()">
+          </div>
+          <div class="it-field">
+            <label>Foto</label>
+            <div class="it-foto-row">
+              <button class="it-btn-foto" onclick="document.getElementById('it-foto-input').click()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Subir foto
+              </button>
+              <span id="it-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
+              <input id="it-foto-input" type="file" accept="image/*" style="display:none" onchange="it_loadFoto(event)">
+            </div>
+          </div>
+        </div>
+        <div class="it-actions">
+          <button class="it-btn-save" onclick="applyEdit()">Aplicar cambios</button>
+          <button class="it-btn-cancel" onclick="cancelEdit()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-add-tarjeta" onclick="addTarjeta()" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Agregar tarjeta
+    </button>
+
+    <!-- TÉCNICO ALTERNO TGU -->
+    <div style="margin-top:2.5rem;">
+      <div class="tarjetas-header">
+        <h3>
+          <span class="titulo-turno">
+            <span class="titulo-linea">Técnico Alterno</span>
+            <span class="titulo-destacado" style="background:linear-gradient(135deg,#3C3489 0%,#534AB7 50%,#3C3489 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">de Turno</span>
+          </span>
+        </h3>
+      </div>
+      <div class="tarjetas-grid" id="tarjetas-grid-alt" style="grid-template-columns:1fr;max-width:680px;margin:0 auto;"></div>
+
+      <div id="it-panel-alt" style="display:none;margin-top:1.75rem;">
+        <div class="it-panel-card">
+          <div class="it-panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Editar Técnico Alterno — TGU
+          </div>
+          <div class="it-fields">
+            <div class="it-field"><label>Nombre</label><input id="alt-nombre" type="text" placeholder="Nombre completo" oninput="previewEditAlt()"></div>
+            <div class="it-field"><label>Cargo</label><input id="alt-cargo" type="text" placeholder="Cargo" oninput="previewEditAlt()"></div>
+            <div class="it-field"><label>Teléfono</label><input id="alt-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEditAlt()"></div>
+            <div class="it-field">
+              <label>Foto</label>
+              <div class="it-foto-row">
+                <button class="it-btn-foto" onclick="document.getElementById('alt-foto-input').click()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Subir foto
+                </button>
+                <span id="alt-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
+                <input id="alt-foto-input" type="file" accept="image/*" style="display:none" onchange="alt_loadFoto(event)">
+              </div>
+            </div>
+          </div>
+          <div class="it-actions">
+            <button class="it-btn-save" onclick="applyEditAlt()">Aplicar cambios</button>
+            <button class="it-btn-cancel" onclick="cancelEditAlt()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /tab-tgu -->
+
+  <!-- TAB SPS -->
+  <div id="tab-sps" class="tab-panel" style="display:none">
+    <div class="tarjetas-header">
+      <h3>
+        <span class="titulo-turno">
+          <span class="titulo-linea">Técnico Actual</span>
+          <span class="titulo-destacado">de Turno</span>
+        </span>
+      </h3>
+    </div>
+    <div class="tarjetas-grid" id="tarjetas-grid-sps" style="grid-template-columns:1fr;max-width:680px;margin:0 auto;"></div>
+
+    <div id="it-panel-sps" style="display:none; margin-top:1.75rem;">
+      <div class="it-panel-card">
+        <div class="it-panel-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Editar Técnico de Turno — San Pedro Sula
+        </div>
+        <div class="it-fields">
+          <div class="it-field"><label>Nombre</label><input id="sps-nombre" type="text" placeholder="Nombre completo" oninput="previewEditSps()"></div>
+          <div class="it-field"><label>Cargo</label><input id="sps-cargo" type="text" placeholder="Cargo" oninput="previewEditSps()"></div>
+          <div class="it-field"><label>Teléfono</label><input id="sps-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEditSps()"></div>
+          <div class="it-field">
+            <label>Foto</label>
+            <div class="it-foto-row">
+              <button class="it-btn-foto" onclick="document.getElementById('sps-foto-input').click()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Subir foto
+              </button>
+              <span id="sps-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
+              <input id="sps-foto-input" type="file" accept="image/*" style="display:none" onchange="sps_loadFoto(event)">
+            </div>
+          </div>
+        </div>
+        <div class="it-actions">
+          <button class="it-btn-save" onclick="applyEditSps()">Aplicar cambios</button>
+          <button class="it-btn-cancel" onclick="cancelEditSps()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TÉCNICO ALTERNO SPS -->
+    <div style="margin-top:2.5rem;">
+      <div class="tarjetas-header">
+        <h3>
+          <span class="titulo-turno">
+            <span class="titulo-linea">Técnico Alterno</span>
+            <span class="titulo-destacado" style="background:linear-gradient(135deg,#3C3489 0%,#534AB7 50%,#3C3489 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">de Turno</span>
+          </span>
+        </h3>
+      </div>
+      <div class="tarjetas-grid" id="tarjetas-grid-spsalt" style="grid-template-columns:1fr;max-width:680px;margin:0 auto;"></div>
+
+      <div id="it-panel-spsalt" style="display:none;margin-top:1.75rem;">
+        <div class="it-panel-card">
+          <div class="it-panel-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Editar Técnico Alterno — San Pedro Sula
+          </div>
+          <div class="it-fields">
+            <div class="it-field"><label>Nombre</label><input id="spsalt-nombre" type="text" placeholder="Nombre completo" oninput="previewEditSpsAlt()"></div>
+            <div class="it-field"><label>Cargo</label><input id="spsalt-cargo" type="text" placeholder="Cargo" oninput="previewEditSpsAlt()"></div>
+            <div class="it-field"><label>Teléfono</label><input id="spsalt-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEditSpsAlt()"></div>
+            <div class="it-field">
+              <label>Foto</label>
+              <div class="it-foto-row">
+                <button class="it-btn-foto" onclick="document.getElementById('spsalt-foto-input').click()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Subir foto
+                </button>
+                <span id="spsalt-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
+                <input id="spsalt-foto-input" type="file" accept="image/*" style="display:none" onchange="spsalt_loadFoto(event)">
+              </div>
+            </div>
+          </div>
+          <div class="it-actions">
+            <button class="it-btn-save" onclick="applyEditSpsAlt()">Aplicar cambios</button>
+            <button class="it-btn-cancel" onclick="cancelEditSpsAlt()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /tab-sps -->
+
+  </div>
+</div>
+
+<div id="toast"></div>
+<footer><strong>Analítica Hondureña S. de R.L. de C.V.</strong> &mdash; Uso interno exclusivo &mdash; Dpto. TI</footer>
+
+<script>
+/* PARTÍCULAS */
+(function(){
+  const cv=document.getElementById('particles'), ctx=cv.getContext('2d');
+  let W,H,pts;
+  function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; init(); }
+  function init(){
+    pts=[]; const n=Math.floor(W*H/18000);
+    for(let i=0;i<n;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,r:Math.random()*1.5+0.5,a:Math.random()});
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=`rgba(100,160,255,${p.a*0.4})`; ctx.fill();
+    });
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<100){ ctx.beginPath(); ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y);
+        ctx.strokeStyle=`rgba(100,160,255,${(1-d/100)*0.12})`; ctx.lineWidth=0.5; ctx.stroke(); }
+    }
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize); resize(); draw();
+})();
+
+/* CÓDIGOS DE ACCESO — editar aquí */
+const CODIGOS_VALIDOS = [
+  { codigo:"TEC2024",   nombre:"Admin General",   rol:"it" },
+  { codigo:"TURN2025",  nombre:"Supervisor",       rol:"it" },
+  { codigo:"ANALITICA", nombre:"Recursos Humanos", rol:"it" },
+  { codigo:"GERENCIA1", nombre:"Gerencia",         rol:"it" },
+  { codigo:"SOPORTE77", nombre:"Soporte TI",       rol:"it" },
+  { codigo:"HESCUELA",  nombre:"Hospital Escuela", rol:"view" },
+];
+
+const MAX_INTENTOS = 5;
+let intentos=0, bloqueado=false, rolActual="view";
+
+/* TARJETAS — editar nombre, cargo, telefono aquí */
+const TARJETAS_DATA = [
+  { nombre:"HAROL ORTEZ", cargo:"Ingeniero", telefono:"+504 3280-7355", web:"www.analihsa.com", slogan:"Nuestra Cultura la Excelencia.", imagen:"Fotos/Harold.png" }
+];
+
+const tarjetasImagenes = {};
+
+/* TOAST */
+function showToast(msg, dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+/* AUTH */
+const codeInput=document.getElementById('code-input');
+const errorMsg=document.getElementById('error-msg');
+const hintsEl=document.getElementById('attempts-hint');
+
+codeInput.addEventListener('keydown',e=>{ if(e.key==='Enter') checkCode(); });
+codeInput.addEventListener('input',()=>{ codeInput.classList.remove('error','ok'); errorMsg.style.display='none'; });
+
+function checkCode(){
+  if(bloqueado) return;
+  const val=codeInput.value.trim().toUpperCase();
+  const match=CODIGOS_VALIDOS.find(c=>c.codigo===val);
+  if(match){
+    codeInput.classList.add('ok'); errorMsg.style.display='none';
+    setTimeout(()=>showMain(match.nombre, match.rol),400);
+  } else {
+    intentos++;
+    codeInput.classList.remove('ok'); codeInput.classList.add('error');
+    errorMsg.style.display='block'; codeInput.value='';
+    const restantes=MAX_INTENTOS-intentos;
+    if(restantes<=0){
+      bloqueado=true;
+      errorMsg.textContent='Demasiados intentos. Recarga la página.';
+      document.getElementById('btn-enter').disabled=true;
+      hintsEl.textContent='';
+    } else {
+      hintsEl.textContent=restantes===1?'⚠ Último intento disponible':`${restantes} intentos restantes`;
+    }
+  }
+}
+
+function showMain(nombre, rol){
+  rolActual = rol || "view";
+  document.getElementById('lock-screen').style.display='none';
+  const mc=document.getElementById('main-content');
+  mc.style.display='flex'; mc.classList.add('visible');
+  document.getElementById('session-name').textContent=nombre;
+  // show/hide role badge
+  const badge = document.getElementById('role-badge');
+  if(rol==='it'){
+    badge.textContent='✦ IT Admin'; badge.className='role-badge role-it';
+  } else {
+    badge.textContent='Solo lectura'; badge.className='role-badge role-view';
+  }
+  renderTarjetas();
+  showToast('Bienvenido, '+nombre);
+}
+
+function logout(){
+  document.getElementById('lock-screen').style.display='flex';
+  const mc=document.getElementById('main-content');
+  mc.style.display='none'; mc.classList.remove('visible');
+  codeInput.value=''; codeInput.classList.remove('ok','error');
+  errorMsg.style.display='none';
+  intentos=0; bloqueado=false; rolActual='view'; hintsEl.textContent='';
+  document.getElementById('btn-enter').disabled=false;
+}
+
+/* TARJETAS */
+function initials(name){ return name.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase(); }
+
+
+
+function triggerUpload(i){ const inp=document.getElementById('upload-'+i); if(inp) inp.click(); }
+function loadImage(event,i){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ tarjetasImagenes[i]=e.target.result; renderTarjetas(); showToast('Imagen cargada'); };
+  reader.readAsDataURL(file);
+}
+function clearImage(i){ delete tarjetasImagenes[i]; renderTarjetas(); }
+function addTarjeta(){
+  TARJETAS_DATA.push({nombre:"NUEVO TÉCNICO",cargo:"Cargo",telefono:"+504 0000-0000",web:"www.analihsa.com",slogan:"Nuestra Cultura la Excelencia.",imagen:null});
+  renderTarjetas(); showToast('Tarjeta agregada');
+}
+
+/* IT PANEL */
+let it_tempFoto = null;
+
+function renderTarjetas(){
+  const grid=document.getElementById('tarjetas-grid');
+  const panel=document.getElementById('it-panel');
+  grid.innerHTML=TARJETAS_DATA.map((t,i)=>{
+    const imgSrc=tarjetasImagenes[i]||t.imagen;
+    const fotoHTML=imgSrc
+      ?`<img class="tarjeta-img" src="${imgSrc}" alt="Foto ${t.nombre}">`
+      :`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;position:relative;z-index:1;padding:1rem;">
+          <div onclick="triggerUpload(${i})" style="width:58px;height:58px;border-radius:50%;background:rgba(12,68,124,0.1);border:2px dashed rgba(12,68,124,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 16V8M12 8l-3 3M12 8l3 3" stroke="rgba(12,68,124,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(12,68,124,0.3)" stroke-width="1.5"/></svg>
+          </div>
+          <p style="font-size:0.68rem;color:rgba(12,68,124,0.45);text-align:center;line-height:1.4;">Subir foto</p>
+          <input id="upload-${i}" type="file" accept="image/*" style="display:none" onchange="loadImage(event,${i})">
+        </div>`;
+    const clearBtn=imgSrc?`<button onclick="clearImage(${i})" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:0.7rem;cursor:pointer;z-index:2;">✕</button>`:'';
+    return `<div class="tarjeta-tecnico" style="animation-delay:${i*0.06}s">
+      <div class="tarjeta-izq">
+        <div>
+          <div class="tarjeta-label">Técnico de Turno</div>
+          <div class="tarjeta-nombre">${t.nombre}</div>
+          <div class="tarjeta-cargo">${t.cargo}</div>
+          <div class="tarjeta-telefono">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
+            <span>${t.telefono}</span>
+          </div>
+        </div>
+        <div>
+          <div class="tarjeta-web">${t.web}</div>
+          <div class="tarjeta-slogan">${t.slogan}</div>
+        </div>
+      </div>
+      <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
+    </div>`;
+  }).join('');
+
+  // Show/hide IT panel
+  if(panel){
+    if(rolActual==='it'){
+      panel.style.display='block';
+      const t=TARJETAS_DATA[0];
+      document.getElementById('it-nombre').value=t.nombre;
+      document.getElementById('it-cargo').value=t.cargo;
+      document.getElementById('it-telefono').value=t.telefono;
+    } else {
+      panel.style.display='none';
+    }
+  }
+  renderTarjetasAlt();
+}
+
+function previewEdit(){
+  // live preview while typing
+  const nombre=document.getElementById('it-nombre').value||TARJETAS_DATA[0].nombre;
+  const cargo=document.getElementById('it-cargo').value||TARJETAS_DATA[0].cargo;
+  const telefono=document.getElementById('it-telefono').value||TARJETAS_DATA[0].telefono;
+  const el_n=document.querySelector('.tarjeta-nombre');
+  const el_c=document.querySelector('.tarjeta-cargo');
+  const el_t=document.querySelector('.tarjeta-telefono span');
+  if(el_n) el_n.textContent=nombre;
+  if(el_c) el_c.textContent=cargo;
+  if(el_t) el_t.textContent=telefono;
+}
+
+function it_loadFoto(event){
+  const file=event.target.files[0]; if(!file) return;
+  document.getElementById('it-foto-nombre').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{ it_tempFoto=e.target.result; };
+  reader.readAsDataURL(file);
+}
+
+function applyEdit(){
+  const nombre=document.getElementById('it-nombre').value.trim();
+  const cargo=document.getElementById('it-cargo').value.trim();
+  const telefono=document.getElementById('it-telefono').value.trim();
+  if(nombre) TARJETAS_DATA[0].nombre=nombre;
+  if(cargo)  TARJETAS_DATA[0].cargo=cargo;
+  if(telefono) TARJETAS_DATA[0].telefono=telefono;
+  if(it_tempFoto){ tarjetasImagenes[0]=it_tempFoto; it_tempFoto=null; }
+  document.getElementById('it-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetas();
+  showToast('Cambios aplicados correctamente');
+}
+
+function cancelEdit(){
+  const t=TARJETAS_DATA[0];
+  document.getElementById('it-nombre').value=t.nombre;
+  document.getElementById('it-cargo').value=t.cargo;
+  document.getElementById('it-telefono').value=t.telefono;
+  it_tempFoto=null;
+  document.getElementById('it-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetas();
+}
+
+
+/* SPS DATA */
+const TARJETAS_DATA_SPS = [
+  { nombre:"Luis Romero", cargo:"Técnico Biomedical", telefono:"+504 0000-0000",
+    web:"www.analihsa.com", slogan:"Nuestra Cultura la Excelencia.", imagen: "Fotos/Luis.png" }
+];
+const tarjetasImagenesSps = {};
+let sps_tempFoto = null;
+
+function switchTab(tab, btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-tgu').style.display = tab==='tgu'?'block':'none';
+  document.getElementById('tab-sps').style.display = tab==='sps'?'block':'none';
+  if(tab==='sps') renderTarjetasSps();
+}
+
+function renderTarjetasSps(){
+  const grid = document.getElementById('tarjetas-grid-sps');
+  const panel = document.getElementById('it-panel-sps');
+  if(!grid) return;
+  grid.innerHTML = TARJETAS_DATA_SPS.map((t,i)=>{
+    const imgSrc = tarjetasImagenesSps[i] || t.imagen;
+    const fotoHTML = imgSrc
+      ? `<img class="tarjeta-img" src="${imgSrc}" alt="Foto ${t.nombre}">`
+      : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;position:relative;z-index:1;padding:1rem;">
+           <div onclick="triggerUploadSps(${i})" style="width:58px;height:58px;border-radius:50%;background:rgba(12,68,124,0.1);border:2px dashed rgba(12,68,124,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 16V8M12 8l-3 3M12 8l3 3" stroke="rgba(12,68,124,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(12,68,124,0.3)" stroke-width="1.5"/></svg>
+           </div>
+           <p style="font-size:0.68rem;color:rgba(12,68,124,0.45);text-align:center;line-height:1.4;">Subir foto</p>
+           <input id="sps-upload-${i}" type="file" accept="image/*" style="display:none" onchange="loadImageSps(event,${i})">
+         </div>`;
+    const clearBtn = imgSrc ? `<button onclick="clearImageSps(${i})" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:0.7rem;cursor:pointer;z-index:2;">✕</button>` : '';
+    return `<div class="tarjeta-tecnico" style="animation-delay:${i*0.06}s">
+      <div class="tarjeta-izq">
+        <div>
+          <div class="tarjeta-label">Técnico de Turno</div>
+          <div class="tarjeta-nombre sps-nombre-el">${t.nombre}</div>
+          <div class="tarjeta-cargo sps-cargo-el">${t.cargo}</div>
+          <div class="tarjeta-telefono">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
+            <span class="sps-tel-el">${t.telefono}</span>
+          </div>
+        </div>
+        <div>
+          <div class="tarjeta-web">${t.web}</div>
+          <div class="tarjeta-slogan">${t.slogan}</div>
+        </div>
+      </div>
+      <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
+    </div>`;
+  }).join('');
+
+  if(panel){
+    if(rolActual==='it'){
+      panel.style.display='block';
+      const t=TARJETAS_DATA_SPS[0];
+      document.getElementById('sps-nombre').value=t.nombre;
+      document.getElementById('sps-cargo').value=t.cargo;
+      document.getElementById('sps-telefono').value=t.telefono;
+    } else {
+      panel.style.display='none';
+    }
+  }
+  renderTarjetasSpsAlt();
+}
+
+function triggerUploadSps(i){ const inp=document.getElementById('sps-upload-'+i); if(inp) inp.click(); }
+function loadImageSps(event,i){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ tarjetasImagenesSps[i]=e.target.result; renderTarjetasSps(); showToast('Imagen cargada'); };
+  reader.readAsDataURL(file);
+}
+function clearImageSps(i){ delete tarjetasImagenesSps[i]; renderTarjetasSps(); }
+
+function previewEditSps(){
+  const n=document.getElementById('sps-nombre').value;
+  const c=document.getElementById('sps-cargo').value;
+  const t=document.getElementById('sps-telefono').value;
+  const en=document.querySelector('.sps-nombre-el');
+  const ec=document.querySelector('.sps-cargo-el');
+  const et=document.querySelector('.sps-tel-el');
+  if(en&&n) en.textContent=n;
+  if(ec&&c) ec.textContent=c;
+  if(et&&t) et.textContent=t;
+}
+
+function sps_loadFoto(event){
+  const file=event.target.files[0]; if(!file) return;
+  document.getElementById('sps-foto-nombre').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{ sps_tempFoto=e.target.result; };
+  reader.readAsDataURL(file);
+}
+
+function applyEditSps(){
+  const nombre=document.getElementById('sps-nombre').value.trim();
+  const cargo=document.getElementById('sps-cargo').value.trim();
+  const telefono=document.getElementById('sps-telefono').value.trim();
+  if(nombre) TARJETAS_DATA_SPS[0].nombre=nombre;
+  if(cargo)  TARJETAS_DATA_SPS[0].cargo=cargo;
+  if(telefono) TARJETAS_DATA_SPS[0].telefono=telefono;
+  if(sps_tempFoto){ tarjetasImagenesSps[0]=sps_tempFoto; sps_tempFoto=null; }
+  document.getElementById('sps-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetasSps();
+  showToast('Cambios aplicados — San Pedro Sula');
+}
+
+function cancelEditSps(){
+  const t=TARJETAS_DATA_SPS[0];
+  document.getElementById('sps-nombre').value=t.nombre;
+  document.getElementById('sps-cargo').value=t.cargo;
+  document.getElementById('sps-telefono').value=t.telefono;
+  sps_tempFoto=null;
+  document.getElementById('sps-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetasSps();
+}
+
+
+/* ══ ALTERNO TGU ══ */
+const TARJETAS_DATA_ALT = [
+  { nombre:"Yesther Amaya", cargo:"Técnico Biomedical", telefono:"+504 3179-4995",
+    web:"www.analihsa.com", slogan:"Nuestra Cultura la Excelencia.", imagen: "Fotos/Yester.png" }
+];
+const tarjetasImagenesAlt = {};
+let alt_tempFoto = null;
+
+function renderTarjetasAlt(){
+  const grid = document.getElementById('tarjetas-grid-alt');
+  const panel = document.getElementById('it-panel-alt');
+  if(!grid) return;
+  grid.innerHTML = TARJETAS_DATA_ALT.map((t,i)=>{
+    const imgSrc = tarjetasImagenesAlt[i] || t.imagen;
+    const fotoHTML = imgSrc
+      ? `<img class="tarjeta-img" src="${imgSrc}" alt="Foto ${t.nombre}">`
+      : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;position:relative;z-index:1;padding:1rem;">
+           <div onclick="triggerUploadAlt(${i})" style="width:58px;height:58px;border-radius:50%;background:rgba(83,74,183,0.1);border:2px dashed rgba(83,74,183,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 16V8M12 8l-3 3M12 8l3 3" stroke="rgba(83,74,183,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(83,74,183,0.3)" stroke-width="1.5"/></svg>
+           </div>
+           <p style="font-size:0.68rem;color:rgba(83,74,183,0.45);text-align:center;line-height:1.4;">Subir foto</p>
+           <input id="alt-upload-${i}" type="file" accept="image/*" style="display:none" onchange="loadImageAlt(event,${i})">
+         </div>`;
+    const clearBtn = imgSrc ? `<button onclick="clearImageAlt(${i})" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:0.7rem;cursor:pointer;z-index:2;">✕</button>` : '';
+    return `<div class="tarjeta-tecnico tarjeta-alt" style="animation-delay:${i*0.06}s">
+      <div class="tarjeta-izq tarjeta-izq-alt">
+        <div>
+          <div class="tarjeta-label">Técnico Alterno</div>
+          <div class="tarjeta-nombre alt-nombre-el">${t.nombre}</div>
+          <div class="tarjeta-cargo alt-cargo-el">${t.cargo}</div>
+          <div class="tarjeta-telefono">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
+            <span class="alt-tel-el">${t.telefono}</span>
+          </div>
+        </div>
+        <div>
+          <div class="tarjeta-web">${t.web}</div>
+          <div class="tarjeta-slogan">${t.slogan}</div>
+        </div>
+      </div>
+      <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
+    </div>`;
+  }).join('');
+  if(panel){
+    if(rolActual==='it'){
+      panel.style.display='block';
+      const t=TARJETAS_DATA_ALT[0];
+      document.getElementById('alt-nombre').value=t.nombre;
+      document.getElementById('alt-cargo').value=t.cargo;
+      document.getElementById('alt-telefono').value=t.telefono;
+    } else { panel.style.display='none'; }
+  }
+}
+
+function triggerUploadAlt(i){ const inp=document.getElementById('alt-upload-'+i); if(inp) inp.click(); }
+function loadImageAlt(event,i){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ tarjetasImagenesAlt[i]=e.target.result; renderTarjetasAlt(); showToast('Imagen cargada'); };
+  reader.readAsDataURL(file);
+}
+function clearImageAlt(i){ delete tarjetasImagenesAlt[i]; renderTarjetasAlt(); }
+function previewEditAlt(){
+  const n=document.getElementById('alt-nombre').value;
+  const c=document.getElementById('alt-cargo').value;
+  const t=document.getElementById('alt-telefono').value;
+  const en=document.querySelector('.alt-nombre-el');
+  const ec=document.querySelector('.alt-cargo-el');
+  const et=document.querySelector('.alt-tel-el');
+  if(en&&n) en.textContent=n;
+  if(ec&&c) ec.textContent=c;
+  if(et&&t) et.textContent=t;
+}
+function alt_loadFoto(event){
+  const file=event.target.files[0]; if(!file) return;
+  document.getElementById('alt-foto-nombre').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{ alt_tempFoto=e.target.result; };
+  reader.readAsDataURL(file);
+}
+function applyEditAlt(){
+  const nombre=document.getElementById('alt-nombre').value.trim();
+  const cargo=document.getElementById('alt-cargo').value.trim();
+  const telefono=document.getElementById('alt-telefono').value.trim();
+  if(nombre) TARJETAS_DATA_ALT[0].nombre=nombre;
+  if(cargo)  TARJETAS_DATA_ALT[0].cargo=cargo;
+  if(telefono) TARJETAS_DATA_ALT[0].telefono=telefono;
+  if(alt_tempFoto){ tarjetasImagenesAlt[0]=alt_tempFoto; alt_tempFoto=null; }
+  document.getElementById('alt-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetasAlt(); showToast('Cambios aplicados — Alterno TGU');
+}
+function cancelEditAlt(){
+  const t=TARJETAS_DATA_ALT[0];
+  document.getElementById('alt-nombre').value=t.nombre;
+  document.getElementById('alt-cargo').value=t.cargo;
+  document.getElementById('alt-telefono').value=t.telefono;
+  alt_tempFoto=null;
+  document.getElementById('alt-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetasAlt();
+}
+
+/* ══ ALTERNO SPS ══ */
+const TARJETAS_DATA_SPSALT = [
+  { nombre:"Jorge Maldonado", cargo:"Ing.Biomedico", telefono:"+504 8879-0267",
+    web:"www.analihsa.com", slogan:"Nuestra Cultura la Excelencia.", imagen: "Fotos/Jorge.png" }
+];
+const tarjetasImagenesSpsAlt = {};
+let spsalt_tempFoto = null;
+
+function renderTarjetasSpsAlt(){
+  const grid = document.getElementById('tarjetas-grid-spsalt');
+  const panel = document.getElementById('it-panel-spsalt');
+  if(!grid) return;
+  grid.innerHTML = TARJETAS_DATA_SPSALT.map((t,i)=>{
+    const imgSrc = tarjetasImagenesSpsAlt[i] || t.imagen;
+    const fotoHTML = imgSrc
+      ? `<img class="tarjeta-img" src="${imgSrc}" alt="Foto ${t.nombre}">`
+      : `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;position:relative;z-index:1;padding:1rem;">
+           <div onclick="triggerUploadSpsAlt(${i})" style="width:58px;height:58px;border-radius:50%;background:rgba(83,74,183,0.1);border:2px dashed rgba(83,74,183,0.25);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 16V8M12 8l-3 3M12 8l3 3" stroke="rgba(83,74,183,0.5)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="3" width="18" height="18" rx="3" stroke="rgba(83,74,183,0.3)" stroke-width="1.5"/></svg>
+           </div>
+           <p style="font-size:0.68rem;color:rgba(83,74,183,0.45);text-align:center;line-height:1.4;">Subir foto</p>
+           <input id="spsalt-upload-${i}" type="file" accept="image/*" style="display:none" onchange="loadImageSpsAlt(event,${i})">
+         </div>`;
+    const clearBtn = imgSrc ? `<button onclick="clearImageSpsAlt(${i})" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:6px;padding:3px 8px;font-size:0.7rem;cursor:pointer;z-index:2;">✕</button>` : '';
+    return `<div class="tarjeta-tecnico tarjeta-alt" style="animation-delay:${i*0.06}s">
+      <div class="tarjeta-izq tarjeta-izq-alt">
+        <div>
+          <div class="tarjeta-label">Técnico Alterno</div>
+          <div class="tarjeta-nombre spsalt-nombre-el">${t.nombre}</div>
+          <div class="tarjeta-cargo spsalt-cargo-el">${t.cargo}</div>
+          <div class="tarjeta-telefono">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z" fill="rgba(255,255,255,0.8)"/></svg>
+            <span class="spsalt-tel-el">${t.telefono}</span>
+          </div>
+        </div>
+        <div>
+          <div class="tarjeta-web">${t.web}</div>
+          <div class="tarjeta-slogan">${t.slogan}</div>
+        </div>
+      </div>
+      <div class="tarjeta-der">${fotoHTML}${clearBtn}</div>
+    </div>`;
+  }).join('');
+  if(panel){
+    if(rolActual==='it'){
+      panel.style.display='block';
+      const t=TARJETAS_DATA_SPSALT[0];
+      document.getElementById('spsalt-nombre').value=t.nombre;
+      document.getElementById('spsalt-cargo').value=t.cargo;
+      document.getElementById('spsalt-telefono').value=t.telefono;
+    } else { panel.style.display='none'; }
+  }
+}
+
+function triggerUploadSpsAlt(i){ const inp=document.getElementById('spsalt-upload-'+i); if(inp) inp.click(); }
+function loadImageSpsAlt(event,i){
+  const file=event.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{ tarjetasImagenesSpsAlt[i]=e.target.result; renderTarjetasSpsAlt(); showToast('Imagen cargada'); };
+  reader.readAsDataURL(file);
+}
+function clearImageSpsAlt(i){ delete tarjetasImagenesSpsAlt[i]; renderTarjetasSpsAlt(); }
+function previewEditSpsAlt(){
+  const n=document.getElementById('spsalt-nombre').value;
+  const c=document.getElementById('spsalt-cargo').value;
+  const t=document.getElementById('spsalt-telefono').value;
+  const en=document.querySelector('.spsalt-nombre-el');
+  const ec=document.querySelector('.spsalt-cargo-el');
+  const et=document.querySelector('.spsalt-tel-el');
+  if(en&&n) en.textContent=n;
+  if(ec&&c) ec.textContent=c;
+  if(et&&t) et.textContent=t;
+}
+function spsalt_loadFoto(event){
+  const file=event.target.files[0]; if(!file) return;
+  document.getElementById('spsalt-foto-nombre').textContent=file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{ spsalt_tempFoto=e.target.result; };
+  reader.readAsDataURL(file);
+}
+function applyEditSpsAlt(){
+  const nombre=document.getElementById('spsalt-nombre').value.trim();
+  const cargo=document.getElementById('spsalt-cargo').value.trim();
+  const telefono=document.getElementById('spsalt-telefono').value.trim();
+  if(nombre) TARJETAS_DATA_SPSALT[0].nombre=nombre;
+  if(cargo)  TARJETAS_DATA_SPSALT[0].cargo=cargo;
+  if(telefono) TARJETAS_DATA_SPSALT[0].telefono=telefono;
+  if(spsalt_tempFoto){ tarjetasImagenesSpsAlt[0]=spsalt_tempFoto; spsalt_tempFoto=null; }
+  document.getElementById('spsalt-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetasSpsAlt(); showToast('Cambios aplicados — Alterno SPS');
+}
+function cancelEditSpsAlt(){
+  const t=TARJETAS_DATA_SPSALT[0];
+  document.getElementById('spsalt-nombre').value=t.nombre;
+  document.getElementById('spsalt-cargo').value=t.cargo;
+  document.getElementById('spsalt-telefono').value=t.telefono;
+  spsalt_tempFoto=null;
+  document.getElementById('spsalt-foto-nombre').textContent='Sin foto seleccionada';
+  renderTarjetasSpsAlt();
+}
+
+
+/* RELOJ */
+function updateClock(){
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  const timeEl = document.getElementById('clock-time');
+  const dateEl = document.getElementById('clock-date');
+  if(timeEl) timeEl.textContent = hh+':'+mm+':'+ss;
+  if(dateEl){
+    const fecha = now.toLocaleDateString('es-HN',{weekday:'short',day:'2-digit',month:'short',year:'numeric'});
+    dateEl.textContent = fecha;
+  }
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+</script>
+</body>
+</html>
