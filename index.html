@@ -207,10 +207,21 @@ header p  { font-size:0.78rem; opacity:0.6; margin-top:2px; }
 .top-bar {
   background:rgba(255,255,255,0.96); backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(12,68,124,0.12);
-  padding:0.75rem 2rem; display:flex; align-items:center;
+  padding:1rem 2rem; display:flex; align-items:center;
   justify-content:space-between; flex-wrap:wrap; gap:0.75rem;
 }
 .top-bar h2 { font-size:1rem; font-weight:600; color:var(--blue-800); }
+.top-bar-left { display:flex; align-items:center; gap:12px; }
+.client-logo-frame {
+  display:none; align-items:center; justify-content:center;
+  width:96px; height:96px; border-radius:16px;
+  background:#fff; border:1px solid rgba(12,68,124,0.12);
+  box-shadow:0 4px 16px rgba(12,68,124,0.12);
+  padding:8px; flex-shrink:0;
+  animation:fadeUp 0.4s cubic-bezier(.22,1,.36,1) both;
+}
+.client-logo-frame img { width:100%; height:100%; object-fit:contain; border-radius:3px; }
+[data-theme="dark"] .client-logo-frame { background:rgba(255,255,255,0.92); border-color:rgba(96,165,250,0.15); }
 .top-bar-right { display:flex; align-items:center; gap:12px; }
 .session-badge {
   font-size:0.75rem;
@@ -563,6 +574,12 @@ footer strong { color:rgba(255,255,255,0.7); }
 }
 .it-field input:focus { border-color:var(--blue-600); background:#fff; }
 .it-foto-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.it-foto-select {
+  width:100%; padding:7px 10px; font-size:0.82rem;
+  border:1px solid var(--gray-100); border-radius:8px;
+  background:#fff; color:var(--gray-900); cursor:pointer;
+}
+[data-theme="dark"] .it-foto-select { background:rgba(15,28,52,0.9); border-color:rgba(96,165,250,0.2); color:#e2e8f0; }
 .it-btn-foto {
   display:flex; align-items:center; gap:5px;
   background:var(--blue-50); color:var(--blue-800);
@@ -704,7 +721,7 @@ footer strong { color:rgba(255,255,255,0.7); }
     </div>
     <h2>Acceso Restringido</h2>
     <p>Ingresa el código de acceso proporcionado<br>por el administrador del sistema.</p>
-    <input id="code-input" type="text" maxlength="8" placeholder="● ● ● ● ● ● ● ●"
+    <input id="code-input" type="text" maxlength="16" placeholder="● ● ● ● ● ● ● ●"
       autocomplete="off" spellcheck="false" aria-label="Código de acceso">
     <div id="error-msg" role="alert">Código incorrecto. Verifica e intenta de nuevo.</div>
     <button class="btn-primary" id="btn-enter" onclick="checkCode()">Verificar acceso</button>
@@ -715,7 +732,12 @@ footer strong { color:rgba(255,255,255,0.7); }
 <!-- MAIN -->
 <div id="main-content">
   <div class="top-bar">
-    <h2>Turnos Operativos — Técnicos</h2>
+    <div class="top-bar-left">
+      <span id="client-logo-frame" class="client-logo-frame">
+        <img id="session-logo" alt="" onerror="this.closest('.client-logo-frame').style.display='none'">
+      </span>
+      <h2>Turnos Operativos — Técnicos</h2>
+    </div>
     <div class="top-bar-right">
       <span class="session-badge">
         <span class="pulse-dot" style="width:6px;height:6px;background:#4ade80;"></span>
@@ -795,10 +817,11 @@ footer strong { color:rgba(255,255,255,0.7); }
           </div>
           <div class="it-field">
             <label>Foto</label>
-            <div class="it-foto-row">
+            <select id="it-foto-select" class="it-foto-select" onchange="it_pickFoto(this.value)"></select>
+            <div class="it-foto-row" style="margin-top:6px;">
               <button class="it-btn-foto" onclick="document.getElementById('it-foto-input').click()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Subir foto
+                Subir foto nueva
               </button>
               <span id="it-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
               <input id="it-foto-input" type="file" accept="image/*" style="display:none" onchange="it_loadFoto(event)">
@@ -843,10 +866,11 @@ footer strong { color:rgba(255,255,255,0.7); }
             <div class="it-field"><label>Teléfono</label><input id="alt-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEditAlt()"></div>
             <div class="it-field">
               <label>Foto</label>
-              <div class="it-foto-row">
+              <select id="alt-foto-select" class="it-foto-select" onchange="alt_pickFoto(this.value)"></select>
+              <div class="it-foto-row" style="margin-top:6px;">
                 <button class="it-btn-foto" onclick="document.getElementById('alt-foto-input').click()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  Subir foto
+                  Subir foto nueva
                 </button>
                 <span id="alt-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
                 <input id="alt-foto-input" type="file" accept="image/*" style="display:none" onchange="alt_loadFoto(event)">
@@ -886,10 +910,11 @@ footer strong { color:rgba(255,255,255,0.7); }
           <div class="it-field"><label>Teléfono</label><input id="sps-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEditSps()"></div>
           <div class="it-field">
             <label>Foto</label>
-            <div class="it-foto-row">
+            <select id="sps-foto-select" class="it-foto-select" onchange="sps_pickFoto(this.value)"></select>
+            <div class="it-foto-row" style="margin-top:6px;">
               <button class="it-btn-foto" onclick="document.getElementById('sps-foto-input').click()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Subir foto
+                Subir foto nueva
               </button>
               <span id="sps-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
               <input id="sps-foto-input" type="file" accept="image/*" style="display:none" onchange="sps_loadFoto(event)">
@@ -927,10 +952,11 @@ footer strong { color:rgba(255,255,255,0.7); }
             <div class="it-field"><label>Teléfono</label><input id="spsalt-telefono" type="text" placeholder="+504 0000-0000" oninput="previewEditSpsAlt()"></div>
             <div class="it-field">
               <label>Foto</label>
-              <div class="it-foto-row">
+              <select id="spsalt-foto-select" class="it-foto-select" onchange="spsalt_pickFoto(this.value)"></select>
+              <div class="it-foto-row" style="margin-top:6px;">
                 <button class="it-btn-foto" onclick="document.getElementById('spsalt-foto-input').click()">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  Subir foto
+                  Subir foto nueva
                 </button>
                 <span id="spsalt-foto-nombre" style="font-size:0.75rem;color:var(--gray-600);">Sin foto seleccionada</span>
                 <input id="spsalt-foto-input" type="file" accept="image/*" style="display:none" onchange="spsalt_loadFoto(event)">
@@ -1337,13 +1363,18 @@ footer strong { color:rgba(255,255,255,0.7); }
 })();
 
 /* CÓDIGOS — almacenados como SHA-256, nunca en texto plano */
+/* Logos: coloca los archivos en la carpeta /Logos junto a este HTML (png o jpg) */
 const CODIGOS_VALIDOS = [
-  { hash:"23d8b81869bb3aa3d4a67fc1a23d4fef124994578c93452f98d192d492b1c4c4", nombre:"Admin General",   rol:"it"   },
-  { hash:"212fa6bf6aa298c9f755b96cb36004853155d8900d1b4de6dd326acc34583e9e", nombre:"Hospital Escuela", rol:"view" },
-  { hash:"06d84813d95939b67d9e4d990fbe3362e55e1bc4d2ee1cc1ab1209217e250e0a", nombre:"San Felipe",       rol:"view" },
-  { hash:"15383149b2142ec911742aabf038be94c49a9869ccede32cbd8d296228f5244d", nombre:"Medical Center",   rol:"view" },
-  { hash:"b4fa62937c8038a11877770cfcb447c478af2b5fd9c21d9e80ae93b3c4de51b1", nombre:"Viera",            rol:"view" },
-  { hash:"db53c39e63531d3955d1c74231c722f9edbb1bae5e689627c822d331ed5bbc89", nombre:"Microlab",         rol:"view" },
+  { hash:"23d8b81869bb3aa3d4a67fc1a23d4fef124994578c93452f98d192d492b1c4c4", nombre:"Admin General",   rol:"it",   logo:"Logos/AdminGeneral.png" },
+  { hash:"212fa6bf6aa298c9f755b96cb36004853155d8900d1b4de6dd326acc34583e9e", nombre:"Hospital Escuela", rol:"view", logo:"Logos/HospitalEscuela.png" },
+  { hash:"06d84813d95939b67d9e4d990fbe3362e55e1bc4d2ee1cc1ab1209217e250e0a", nombre:"San Felipe",       rol:"view", logo:"Logos/SanFelipe.png" },
+  { hash:"15383149b2142ec911742aabf038be94c49a9869ccede32cbd8d296228f5244d", nombre:"Medical Center",   rol:"view", logo:"Logos/MedicalCenter.png" },
+  { hash:"b4fa62937c8038a11877770cfcb447c478af2b5fd9c21d9e80ae93b3c4de51b1", nombre:"Viera",            rol:"view", logo:"Logos/hospital-viera.png" },
+  { hash:"db53c39e63531d3955d1c74231c722f9edbb1bae5e689627c822d331ed5bbc89", nombre:"Microlab",         rol:"view", logo:"Logos/Microlab.png" },
+  { hash:"0baef2eb2e5b3322c4dad1076123b0cfa919e17d0209915dbb24be37f37e681d", nombre:"CDC",               rol:"view", logo:"Logos/CDC.png" },
+  { hash:"81f08191df5828ddccbcae9726884af2b61cdb690bc624fc97f562cc3da71a13", nombre:"Hospital del Valle", rol:"view", logo:"Logos/HospitalDelValle.png" },
+  { hash:"ad271c0b2fb649a233f4551887b131a7b328453516b8c59c999ed16b0d698743", nombre:"Bueso Arias",       rol:"view", logo:"Logos/BuesoArias.png" },
+  { hash:"7b642c8e037ea7a118fdb222d70bfca1abff4c43ac5cae07d9e6309e2f51bac4", nombre:"Laboratorios Fiallos", rol:"view", logo:"Logos/LaboratoriosFiallos.png" },
 ];
 
 /* Hashing con SubtleCrypto (nativo del navegador, sin librerías) */
@@ -1380,6 +1411,22 @@ function resetTimer(){
 ['click','keydown','touchstart'].forEach(ev=>
   document.addEventListener(ev, ()=>{ if(rolActual!=='view' || document.getElementById('main-content').style.display!=='none') resetTimer(); }, {passive:true})
 );
+
+/* CATÁLOGO DE FOTOS DISPONIBLES — agrega aquí nuevas fotos que subas a la carpeta /Fotos */
+const FOTOS_DISPONIBLES = [
+  { label:"Harold Ortez",   ruta:"Fotos/Harold.png" },
+  { label:"Luis (TGU Alt.)", ruta:"Fotos/Luis.png" },
+  { label:"Yester Amaya",   ruta:"Fotos/Yester.png" },
+  { label:"Jorge (SPS Alt.)", ruta:"Fotos/Jorge.png" }
+];
+function buildFotoOptions(selectedRuta){
+  let html = `<option value="">— Seleccionar foto existente —</option>`;
+  FOTOS_DISPONIBLES.forEach(f=>{
+    const sel = f.ruta===selectedRuta ? 'selected' : '';
+    html += `<option value="${f.ruta}" ${sel}>${f.label}</option>`;
+  });
+  return html;
+}
 
 /* TARJETAS — editar nombre, cargo, telefono aquí */
 const TARJETAS_DATA = [
@@ -1431,7 +1478,7 @@ async function checkCode(){
   if(match){
     codeInput.classList.add('ok'); errorMsg.style.display='none';
     setIntentos(0);
-    setTimeout(()=>showMain(match.nombre, match.rol), 400);
+    setTimeout(()=>showMain(match.nombre, match.rol, match.logo), 400);
   } else {
     const n = getIntentos() + 1;
     setIntentos(n);
@@ -1449,12 +1496,21 @@ async function checkCode(){
   }
 }
 
-function showMain(nombre, rol){
+function showMain(nombre, rol, logo){
   rolActual = rol || "view";
   document.getElementById('lock-screen').style.display='none';
   const mc=document.getElementById('main-content');
   mc.style.display='flex'; mc.classList.add('visible');
   document.getElementById('session-name').textContent=nombre;
+  const logoEl = document.getElementById('session-logo');
+  const logoFrame = document.getElementById('client-logo-frame');
+  if(logo){
+    logoEl.src = logo;
+    logoFrame.style.display='flex';
+  } else {
+    logoEl.removeAttribute('src');
+    logoFrame.style.display='none';
+  }
   const badge = document.getElementById('role-badge');
   if(rol==='it'){
     badge.textContent='✦ IT Admin'; badge.className='role-badge role-it';
@@ -1475,6 +1531,9 @@ function logout(){
   errorMsg.style.display='none';
   rolActual='view'; hintsEl.textContent='';
   checkDelay=400;
+  const logoEl=document.getElementById('session-logo');
+  logoEl.removeAttribute('src');
+  document.getElementById('client-logo-frame').style.display='none';
   if(!isBloqueado()) document.getElementById('btn-enter').disabled=false;
 }
 
@@ -1549,6 +1608,7 @@ function renderTarjetas(){
       document.getElementById('it-nombre').value=t.nombre;
       document.getElementById('it-cargo').value=t.cargo;
       document.getElementById('it-telefono').value=t.telefono;
+      document.getElementById('it-foto-select').innerHTML=buildFotoOptions(tarjetasImagenes[0]||t.imagen);
     } else {
       panel.style.display='none';
     }
@@ -1572,9 +1632,17 @@ function previewEdit(){
 function it_loadFoto(event){
   const file=event.target.files[0]; if(!file) return;
   document.getElementById('it-foto-nombre').textContent=file.name;
+  document.getElementById('it-foto-select').value='';
   const reader=new FileReader();
   reader.onload=e=>{ it_tempFoto=e.target.result; };
   reader.readAsDataURL(file);
+}
+
+function it_pickFoto(ruta){
+  if(!ruta) return;
+  it_tempFoto = ruta;
+  document.getElementById('it-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('it-foto-input').value='';
 }
 
 function applyEdit(){
@@ -1597,6 +1665,7 @@ function cancelEdit(){
   document.getElementById('it-telefono').value=t.telefono;
   it_tempFoto=null;
   document.getElementById('it-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('it-foto-select').innerHTML=buildFotoOptions(tarjetasImagenes[0]||t.imagen);
   renderTarjetas();
 }
 
@@ -1897,6 +1966,7 @@ function renderTarjetasSps(){
       document.getElementById('sps-nombre').value=t.nombre;
       document.getElementById('sps-cargo').value=t.cargo;
       document.getElementById('sps-telefono').value=t.telefono;
+      document.getElementById('sps-foto-select').innerHTML=buildFotoOptions(tarjetasImagenesSps[0]||t.imagen);
     } else {
       panel.style.display='none';
     }
@@ -1928,9 +1998,17 @@ function previewEditSps(){
 function sps_loadFoto(event){
   const file=event.target.files[0]; if(!file) return;
   document.getElementById('sps-foto-nombre').textContent=file.name;
+  document.getElementById('sps-foto-select').value='';
   const reader=new FileReader();
   reader.onload=e=>{ sps_tempFoto=e.target.result; };
   reader.readAsDataURL(file);
+}
+
+function sps_pickFoto(ruta){
+  if(!ruta) return;
+  sps_tempFoto = ruta;
+  document.getElementById('sps-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('sps-foto-input').value='';
 }
 
 function applyEditSps(){
@@ -1953,6 +2031,7 @@ function cancelEditSps(){
   document.getElementById('sps-telefono').value=t.telefono;
   sps_tempFoto=null;
   document.getElementById('sps-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('sps-foto-select').innerHTML=buildFotoOptions(tarjetasImagenesSps[0]||t.imagen);
   renderTarjetasSps();
 }
 
@@ -2001,6 +2080,7 @@ function renderTarjetasAlt(){
       document.getElementById('alt-nombre').value=t.nombre;
       document.getElementById('alt-cargo').value=t.cargo;
       document.getElementById('alt-telefono').value=t.telefono;
+      document.getElementById('alt-foto-select').innerHTML=buildFotoOptions(tarjetasImagenesAlt[0]||t.imagen);
     } else { panel.style.display='none'; }
   }
 }
@@ -2027,9 +2107,16 @@ function previewEditAlt(){
 function alt_loadFoto(event){
   const file=event.target.files[0]; if(!file) return;
   document.getElementById('alt-foto-nombre').textContent=file.name;
+  document.getElementById('alt-foto-select').value='';
   const reader=new FileReader();
   reader.onload=e=>{ alt_tempFoto=e.target.result; };
   reader.readAsDataURL(file);
+}
+function alt_pickFoto(ruta){
+  if(!ruta) return;
+  alt_tempFoto = ruta;
+  document.getElementById('alt-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('alt-foto-input').value='';
 }
 function applyEditAlt(){
   const nombre=document.getElementById('alt-nombre').value.trim();
@@ -2049,6 +2136,7 @@ function cancelEditAlt(){
   document.getElementById('alt-telefono').value=t.telefono;
   alt_tempFoto=null;
   document.getElementById('alt-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('alt-foto-select').innerHTML=buildFotoOptions(tarjetasImagenesAlt[0]||t.imagen);
   renderTarjetasAlt();
 }
 
@@ -2096,6 +2184,7 @@ function renderTarjetasSpsAlt(){
       document.getElementById('spsalt-nombre').value=t.nombre;
       document.getElementById('spsalt-cargo').value=t.cargo;
       document.getElementById('spsalt-telefono').value=t.telefono;
+      document.getElementById('spsalt-foto-select').innerHTML=buildFotoOptions(tarjetasImagenesSpsAlt[0]||t.imagen);
     } else { panel.style.display='none'; }
   }
 }
@@ -2122,9 +2211,16 @@ function previewEditSpsAlt(){
 function spsalt_loadFoto(event){
   const file=event.target.files[0]; if(!file) return;
   document.getElementById('spsalt-foto-nombre').textContent=file.name;
+  document.getElementById('spsalt-foto-select').value='';
   const reader=new FileReader();
   reader.onload=e=>{ spsalt_tempFoto=e.target.result; };
   reader.readAsDataURL(file);
+}
+function spsalt_pickFoto(ruta){
+  if(!ruta) return;
+  spsalt_tempFoto = ruta;
+  document.getElementById('spsalt-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('spsalt-foto-input').value='';
 }
 function applyEditSpsAlt(){
   const nombre=document.getElementById('spsalt-nombre').value.trim();
@@ -2144,6 +2240,7 @@ function cancelEditSpsAlt(){
   document.getElementById('spsalt-telefono').value=t.telefono;
   spsalt_tempFoto=null;
   document.getElementById('spsalt-foto-nombre').textContent='Sin foto seleccionada';
+  document.getElementById('spsalt-foto-select').innerHTML=buildFotoOptions(tarjetasImagenesSpsAlt[0]||t.imagen);
   renderTarjetasSpsAlt();
 }
 
