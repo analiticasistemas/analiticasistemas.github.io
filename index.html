@@ -475,6 +475,32 @@ footer strong { color:rgba(255,255,255,0.7); }
 .guia-steps li em { color:var(--blue-600); font-style:italic; font-weight:600; }
 
 /* Filtros */
+.guia-paso-label {
+  font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--blue-600); margin-bottom:8px;
+}
+.guia-area-chip {
+  font-size:0.8rem; font-weight:700; padding:8px 16px;
+  border-radius:12px; border:1.5px solid var(--gray-100);
+  background:#fff; color:var(--gray-800); cursor:pointer;
+  transition:all 0.15s; display:flex; align-items:center; gap:7px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.06);
+}
+.guia-area-chip:hover { border-color:var(--blue-600); color:var(--blue-600); background:#f0f6ff; }
+.guia-area-chip.active {
+  background:linear-gradient(135deg,#0C447C,#185FA5);
+  color:#fff; border-color:transparent;
+  box-shadow:0 2px 8px rgba(12,68,124,0.3);
+}
+.guia-area-chip .guia-area-count {
+  font-size:0.65rem; font-weight:800; background:rgba(0,0,0,0.08);
+  border-radius:10px; padding:1px 7px; line-height:1.4;
+}
+.guia-area-chip.active .guia-area-count { background:rgba(255,255,255,0.25); }
+[data-theme="dark"] .guia-area-chip { background:rgba(12,24,48,0.8); border-color:rgba(96,165,250,0.2); color:#94a3b8; }
+[data-theme="dark"] .guia-area-chip:hover { border-color:#60a5fa; color:#60a5fa; background:rgba(96,165,250,0.08); }
+[data-theme="dark"] .guia-area-chip.active { background:linear-gradient(135deg,#0C447C,#185FA5); color:#fff; }
+
 .guia-filtro {
   font-size:0.75rem; font-weight:600; padding:6px 14px;
   border-radius:20px; border:1.5px solid var(--gray-100);
@@ -984,39 +1010,45 @@ footer strong { color:rgba(255,255,255,0.7); }
         </h3>
       </div>
 
+      <!-- Sin equipos asignados -->
+      <div id="guia-sin-equipos" style="display:none;text-align:center;padding:2.5rem 1.5rem;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">🛠️</div>
+        <div style="font-weight:700;font-size:1rem;margin-bottom:0.4rem;color:var(--text-main);">Próximamente disponible para tu sede</div>
+        <div style="font-size:0.85rem;color:var(--text-sub);line-height:1.5;">Aún no se ha asignado la lista de equipos de esta guía para tu institución.<br>Contacta a soporte técnico si necesitas el procedimiento de un equipo en particular.</div>
+      </div>
+
       <!-- Buscador de texto -->
-      <div style="margin-bottom:1rem;position:relative;">
+      <div id="guia-buscador-wrap" style="margin-bottom:1rem;position:relative;">
         <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.4;pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <input id="guia-buscar" type="text" placeholder="Buscar..."
           oninput="buscarGuia()"
           style="width:100%;box-sizing:border-box;padding:10px 12px 10px 36px;border-radius:10px;border:1.5px solid rgba(96,165,250,0.35);background:rgba(255,255,255,0.7);font-size:0.92rem;outline:none;color:inherit;transition:border-color .2s;"
           onfocus="this.style.borderColor='var(--blue-600)'" onblur="this.style.borderColor='rgba(96,165,250,0.35)'"></div>
 
-      <!-- Filtro por equipo -->
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.25rem;">
-        <button class="guia-filtro active" onclick="filtrarGuia('todos',this)">Todos</button>
-        <button class="guia-filtro" onclick="filtrarGuia('bc6200',this)">Mindray BC-6200</button>
-        <button class="guia-filtro" onclick="filtrarGuia('siemens',this)">Siemens CA-660</button>
-        <button class="guia-filtro" onclick="filtrarGuia('exl200',this)">EXL 200</button>
-        <button class="guia-filtro" onclick="filtrarGuia('rp500',this)">RapidPoint 500</button>
-        <button class="guia-filtro" onclick="filtrarGuia('atellica',this)">Atellica 1500</button>
-        <button class="guia-filtro" onclick="filtrarGuia('clinitek',this)">Clinitek Advantus</button>
+      <!-- PASO 1: Selector de Área -->
+      <div id="guia-paso-area" style="margin-bottom:1.25rem;">
+        <div class="guia-paso-label">1. Elige un área</div>
+        <div id="guia-areas-wrap" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
       </div>
-      <!-- Botones de descarga PDF por equipo -->
-      <div id="guia-pdf-btns" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem;align-items:center;padding:10px 14px;background:rgba(24,95,165,0.05);border-radius:12px;border:1px solid rgba(24,95,165,0.1);">
+
+      <!-- PASO 2: Selector de Equipo (dentro del área elegida) -->
+      <div id="guia-paso-equipo" style="display:none;margin-bottom:1.5rem;">
+        <div class="guia-paso-label">2. Elige el equipo</div>
+        <div id="guia-equipos-wrap" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+
+      <!-- Botones de descarga PDF -->
+      <div id="guia-pdf-btns" style="display:none;flex-wrap:wrap;gap:8px;margin-bottom:1.5rem;align-items:center;padding:10px 14px;background:rgba(24,95,165,0.05);border-radius:12px;border:1px solid rgba(24,95,165,0.1);">
         <span style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;opacity:0.5;margin-right:4px;">&#8615; PDF:</span>
-        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('bc6200','Mindray BC-6200')">BC-6200</button>
-        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('siemens','Siemens CA-660')">CA-660</button>
-        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('exl200','EXL 200')">EXL 200</button>
-        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('rp500','RapidPoint 500')">RapidPoint 500</button>
-        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('atellica','Atellica 1500')">Atellica 1500</button>
-        <button class="guia-pdf-btn" onclick="descargarGuiaPDF('clinitek','Clinitek Advantus')">Clinitek Advantus</button>
-        <button class="guia-pdf-btn guia-pdf-todos" onclick="descargarGuiaPDF('todos','Todos los equipos')">Todos</button>
+        <div id="guia-pdf-btns-dinamico" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        <button class="guia-pdf-btn guia-pdf-todos" onclick="descargarGuiaPDF('todos','Todos los equipos')">Todos los míos</button>
       </div>
 
       <div id="guia-sin-resultados" style="display:none;text-align:center;padding:2rem;opacity:0.5;font-size:0.9rem;">Sin resultados</div>
+      <div id="guia-vacio-seleccion" style="display:none;text-align:center;padding:1.75rem;opacity:0.55;font-size:0.85rem;">Elige un área arriba para ver los equipos disponibles.</div>
       <div style="display:flex;flex-direction:column;gap:12px;" id="guia-lista">
 
+        <!-- ══════ HOSPITAL ESCUELA ══════ -->
         <!-- BC-6200 -->
         <div class="guia-card" data-equipo="bc6200">
           <div class="guia-card-header">
@@ -1033,7 +1065,7 @@ footer strong { color:rgba(255,255,255,0.7); }
           </ol>
         </div>
 
-        <!-- CA-660 -->
+        <!-- CA-660 (Siemens) -->
         <div class="guia-card" data-equipo="siemens">
           <div class="guia-card-header">
             <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Coagulación</span>
@@ -1113,9 +1145,288 @@ footer strong { color:rgba(255,255,255,0.7); }
           </ol>
         </div>
 
+        <!-- ══════ HEMATOLOGÍA — equipos nuevos ══════ -->
+        <!-- BC-5150 -->
+        <div class="guia-card" data-equipo="bc5150">
+          <div class="guia-card-header">
+            <span class="guia-badge">Hematología</span>
+            <span class="guia-titulo">Mindray BC-5150 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar a que complete el ciclo de auto-verificación de fondo (background) antes de procesar muestras.</li>
+            <li>Verificar nivel de los dos reactivos de lisis y del diluyente. El BC-5150 usa solo tres reactivos de rutina; reponer antes de que se agoten.</li>
+            <li>Correr el control de calidad en los tres niveles (bajo, normal, alto) al inicio de la jornada y registrar los resultados en la bitácora de QC.</li>
+            <li>Para muestra de sangre capilar (pacientes pediátricos), usar el modo de aspiración directa desde el probe; para venosa, homogenizar el tubo EDTA por inversión 8-10 veces.</li>
+            <li>Revisar el parámetro NLR e histogramas de PLT/RBC en busca de alarmas (flags) antes de validar el resultado; si hay alarma morfológica, confirmar por frotis.</li>
+            <li>Al finalizar el turno, ejecutar el ciclo de limpieza/apagado desde el menú <em>Mantenimiento → Apagado</em> para evitar obstrucciones en el sistema de aspiración.</li>
+          </ol>
+        </div>
+
+        <!-- BC-760 -->
+        <div class="guia-card" data-equipo="bc760">
+          <div class="guia-card-header">
+            <span class="guia-badge">Hematología</span>
+            <span class="guia-titulo">Mindray BC-760 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar el auto-chequeo inicial; confirmar que no existan alarmas activas en la pantalla principal antes de iniciar.</li>
+            <li>Verificar nivel de reactivos (diluyente, lisis, detergente) y de desecho. No iniciar la jornada con el contenedor de desecho lleno.</li>
+            <li>Ejecutar control de calidad de los tres niveles antes de la primera muestra de paciente; comparar contra las gráficas Levey-Jennings.</li>
+            <li>Homogenizar bien las muestras EDTA por inversión suave (8-10 veces) y evitar muestras coaguladas o con microcoágulos.</li>
+            <li>Si el equipo reporta alarma de aspiración u obstrucción, ejecutar la rutina de desbloqueo del menú de mantenimiento antes de reintentar.</li>
+            <li>Al cierre de turno, realizar la limpieza/apagado programado y dejar registro de cualquier incidencia en la bitácora del equipo.</li>
+          </ol>
+        </div>
+
+        <!-- BC-515 (Viera) -->
+        <div class="guia-card" data-equipo="bc515">
+          <div class="guia-card-header">
+            <span class="guia-badge">Hematología</span>
+            <span class="guia-titulo">Mindray BC-515 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y permitir que finalice el ciclo de calentamiento y auto-verificación antes de cargar muestras.</li>
+            <li>Verificar niveles de diluyente y lisis; reponer cuando el indicador de la pantalla marque nivel bajo, no esperar a que se agote.</li>
+            <li>Correr controles de calidad en los niveles disponibles antes de procesar pacientes, siguiendo la frecuencia establecida por el laboratorio.</li>
+            <li>Homogenizar las muestras EDTA por inversión 8-10 veces; verificar que el volumen de muestra sea suficiente para evitar errores de aspiración.</li>
+            <li>Revisar las alarmas (flags) del resultado antes de reportarlo; confirmar hallazgos morfológicos relevantes por frotis de sangre periférica.</li>
+            <li>Al finalizar la jornada, ejecutar la rutina de limpieza/apagado desde el menú de mantenimiento del equipo.</li>
+          </ol>
+        </div>
+
+        <!-- ══════ COAGULACIÓN — equipos nuevos ══════ -->
+        <!-- CA-600 Series -->
+        <div class="guia-card" data-equipo="ca600">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Coagulación</span>
+            <span class="guia-titulo">CA-600 Series — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar que el bloque térmico alcance los 37 °C antes de iniciar el procesamiento. Verificar la temperatura en pantalla.</li>
+            <li>Reconstituir los reactivos (tromboplastina/reactivo de TP, APTT, etc.) según el inserto del fabricante, evitando la formación de burbujas.</li>
+            <li>Correr calibración y control de calidad al inicio de la jornada y cada vez que se cambie de lote de reactivo.</li>
+            <li>Utilizar tubos de citrato sódico 3.2 % con llenado correcto (relación 9:1); rechazar tubos sub o sobrellenados.</li>
+            <li>Centrifugar el plasma según el protocolo del laboratorio y procesar dentro del tiempo de estabilidad recomendado para cada prueba.</li>
+            <li>Al finalizar, cubrir los reactivos abiertos y ejecutar el ciclo de limpieza de agujas/sondas desde el menú de mantenimiento.</li>
+          </ol>
+        </div>
+
+        <!-- Sysmex CA-660 -->
+        <div class="guia-card" data-equipo="ca660sys">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Coagulación</span>
+            <span class="guia-titulo">Sysmex CA-660 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y dejar que complete el calentamiento del bloque de reacción (37 °C) y la verificación óptica inicial.</li>
+            <li>Preparar los reactivos siguiendo el inserto Sysmex correspondiente; respetar el tiempo de estabilización antes de usarlos.</li>
+            <li>Ejecutar calibración y QC (normal/patológico) antes de la primera muestra y al abrir cada nuevo lote de reactivo.</li>
+            <li>Usar tubos de citrato sódico 3.2 % con relación de llenado 9:1; verificar ausencia de hemólisis o coágulos visibles en la muestra.</li>
+            <li>Verificar el estado de las jeringas/agujas de pipeteo periódicamente; una aspiración irregular puede generar resultados erráticos.</li>
+            <li>Al cierre de turno, ejecutar la limpieza programada de sondas y cubrir los reactivos para minimizar evaporación.</li>
+          </ol>
+        </div>
+
+        <!-- Sysmex CA-560 -->
+        <div class="guia-card" data-equipo="ca560sys">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Coagulación</span>
+            <span class="guia-titulo">Sysmex CA-560 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar el calentamiento del bloque térmico y la verificación inicial del sistema óptico/mecánico.</li>
+            <li>Reconstituir reactivos según indicaciones del fabricante; dejar reposar el tiempo indicado antes de cargarlos al equipo.</li>
+            <li>Correr calibración y controles de calidad al inicio de jornada y al cambiar de lote de reactivo.</li>
+            <li>Verificar el llenado correcto de los tubos de citrato 3.2 % (9:1); muestras mal llenadas alteran los tiempos de coagulación.</li>
+            <li>Evitar procesar muestras hemolizadas, lipémicas o con coágulos visibles; repetir la toma si es necesario.</li>
+            <li>Al finalizar, realizar la limpieza de sondas/agujas y revisar que no queden reactivos destapados dentro del equipo.</li>
+          </ol>
+        </div>
+
+        <!-- ══════ QUÍMICA CLÍNICA — equipos nuevos ══════ -->
+        <!-- BS-240 Pro -->
+        <div class="guia-card" data-equipo="bs240pro">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Química Clínica</span>
+            <span class="guia-titulo">Mindray BS-240 Pro — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar la verificación automática de ópticas y del sistema de pipeteo antes de cargar muestras.</li>
+            <li>Verificar niveles de agua destilada/desionizada, solución de lavado y contenedor de desecho líquido antes de iniciar la jornada.</li>
+            <li>Cargar reactivos verificando código de barras legible, fecha de vencimiento y posición correcta en el carrusel de reactivos.</li>
+            <li>Ejecutar calibración y control de calidad (al menos dos niveles) al inicio del turno y al abrir un nuevo lote de reactivo.</li>
+            <li>Centrifugar correctamente las muestras para obtener suero/plasma libre de fibrina o hemólisis antes de cargarlas.</li>
+            <li>Al finalizar el turno, ejecutar el ciclo de mantenimiento diario (lavado de cubetas/sondas) desde el menú correspondiente.</li>
+          </ol>
+        </div>
+
+        <!-- BS-600M -->
+        <div class="guia-card" data-equipo="bs600m">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Química Clínica</span>
+            <span class="guia-titulo">Mindray BS-600M — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar que el sistema reporte estado "Ready" tras el auto-diagnóstico antes de iniciar el procesamiento.</li>
+            <li>Verificar niveles de agua, solución de lavado especial y desecho; reponer/vaciar antes de que el equipo detenga el procesamiento.</li>
+            <li>Cargar reactivos comprobando temperatura de almacenamiento en el compartimento refrigerado y código de barras legible.</li>
+            <li>Correr calibradores y controles de calidad al inicio del turno o al cambiar lote de reactivo, según el protocolo del laboratorio.</li>
+            <li>Para muestras STAT, utilizar la posición/carril prioritario de carga para procesamiento inmediato sin interrumpir la rutina.</li>
+            <li>Al cierre de jornada, ejecutar la rutina de mantenimiento diario y verificar que finalice sin reportar errores.</li>
+          </ol>
+        </div>
+
+        <!-- BS-120 (Viera) -->
+        <div class="guia-card" data-equipo="bs120">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Química Clínica</span>
+            <span class="guia-titulo">Mindray BS-120 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar la verificación inicial del sistema óptico y de pipeteo antes de cargar muestras.</li>
+            <li>Verificar niveles de agua destilada y solución de lavado; vaciar el desecho líquido si está cerca del límite antes de iniciar.</li>
+            <li>Cargar reactivos revisando fecha de vencimiento y posición correcta; evitar mezclar lotes sin recalibrar.</li>
+            <li>Ejecutar calibración y control de calidad al inicio del turno, comparando contra las gráficas de control establecidas.</li>
+            <li>Centrifugar correctamente las muestras antes de cargarlas, evitando suero hemolizado, lipémico o con fibrina.</li>
+            <li>Al finalizar la jornada, ejecutar el lavado/mantenimiento diario de cubetas y sondas desde el menú del equipo.</li>
+          </ol>
+        </div>
+
+        <!-- ══════ ELECTROLITOS ══════ -->
+        <!-- SmartLyte Plus -->
+        <div class="guia-card" data-equipo="smartlyte">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Electrolitos</span>
+            <span class="guia-titulo">Diamond SmartLyte Plus — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar a que complete el ciclo de auto-calibración de electrodos selectivos de ion (ISE) antes de procesar.</li>
+            <li>Verificar nivel de soluciones de calibración y limpiador; reponer cuando el sistema indique nivel bajo, no esperar a que se agoten.</li>
+            <li>Correr control de calidad (normal y patológico) al inicio de la jornada y registrar Na⁺, K⁺ y Cl⁻ contra los rangos esperados.</li>
+            <li>Usar muestra de suero, plasma o sangre total según el protocolo del electrodo; evitar muestras hemolizadas para potasio.</li>
+            <li>Si un electrodo muestra deriva o lecturas inestables, ejecutar la recalibración manual antes de continuar con pacientes.</li>
+            <li>Al finalizar el turno, ejecutar el ciclo de limpieza/condicionamiento de electrodos según la rutina de mantenimiento diario.</li>
+          </ol>
+        </div>
+
+        <!-- ══════ INMUNOANÁLISIS — equipos nuevos ══════ -->
+        <!-- CL-1200i -->
+        <div class="guia-card" data-equipo="cl1200i">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Inmunoanálisis</span>
+            <span class="guia-titulo">Mindray CL-1200i — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar que el sistema óptico y la unidad de quimioluminiscencia completen el auto-diagnóstico.</li>
+            <li>Verificar vigencia de reactivos y sustrato (luminógeno); no cargar kits vencidos aunque el volumen restante sea suficiente.</li>
+            <li>Ejecutar calibración por analito antes de procesar muestras y registrar el lote utilizado en la bitácora del laboratorio.</li>
+            <li>Centrifugar las muestras adecuadamente para obtener suero limpio; evitar fibrina, ya que puede obstruir la sonda de pipeteo.</li>
+            <li>Correr control de calidad en los niveles establecidos al inicio del turno y ante cada cambio de lote de reactivo.</li>
+            <li>Al finalizar, no dejar reactivos abiertos fuera de refrigeración y ejecutar el ciclo de mantenimiento diario del equipo.</li>
+          </ol>
+        </div>
+
+        <!-- CL-900i -->
+        <div class="guia-card" data-equipo="cl900i">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Inmunoanálisis</span>
+            <span class="guia-titulo">Mindray CL-900i — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar el auto-diagnóstico del sistema óptico antes de iniciar el procesamiento de muestras.</li>
+            <li>Verificar fecha de vencimiento y nivel de los reactivos/sustrato antes de cargarlos; respetar la temperatura de almacenamiento indicada.</li>
+            <li>Calibrar cada analito según el protocolo antes de procesar pacientes, especialmente al cambiar de lote de reactivo.</li>
+            <li>Asegurar que las muestras estén centrifugadas y libres de fibrina o burbujas antes de colocarlas en el equipo.</li>
+            <li>Correr el control de calidad en los niveles establecidos al inicio de jornada; no liberar resultados si el QC está fuera de rango.</li>
+            <li>Al cierre del turno, retirar y refrigerar reactivos abiertos según protocolo y ejecutar el mantenimiento diario programado.</li>
+          </ol>
+        </div>
+
+        <!-- Alegria 1 -->
+        <div class="guia-card" data-equipo="alegria1">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Inmunoanálisis</span>
+            <span class="guia-titulo">Alegria 1 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar a que complete el auto-chequeo del sistema antes de cargar los casetes de prueba (test strips).</li>
+            <li>Verificar que los casetes/tiras ELISA estén dentro de fecha de vencimiento y conservados a la temperatura indicada por el fabricante.</li>
+            <li>Cargar las muestras según el volumen indicado por el inserto de cada prueba; evitar burbujas al pipetear.</li>
+            <li>Ejecutar el control de calidad (positivo/negativo) incluido en cada corrida antes de validar resultados de pacientes.</li>
+            <li>Respetar estrictamente los tiempos de incubación que el equipo controla automáticamente; no interrumpir la corrida en curso.</li>
+            <li>Al finalizar, retirar los casetes usados, descartarlos según protocolo de bioseguridad y dejar el equipo limpio para el siguiente uso.</li>
+          </ol>
+        </div>
+
+        <!-- Alegria 2 -->
+        <div class="guia-card" data-equipo="alegria2">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Inmunoanálisis</span>
+            <span class="guia-titulo">Alegria 2 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar el auto-chequeo del sistema antes de cargar los casetes de prueba correspondientes.</li>
+            <li>Verificar fecha de vencimiento de los casetes ELISA y temperatura de conservación antes de su uso.</li>
+            <li>Pipetear el volumen de muestra indicado por el inserto de cada prueba, evitando burbujas y contaminación cruzada.</li>
+            <li>Incluir siempre el control de calidad positivo/negativo de cada corrida antes de liberar resultados de pacientes.</li>
+            <li>No abrir la tapa ni interrumpir el equipo durante los ciclos de incubación automatizados.</li>
+            <li>Al finalizar, descartar los casetes usados según el protocolo de bioseguridad y dejar el equipo listo para la siguiente corrida.</li>
+          </ol>
+        </div>
+
+        <!-- Immulite 1 -->
+        <div class="guia-card" data-equipo="immulite1">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Inmunoanálisis</span>
+            <span class="guia-titulo">Immulite 1 — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar el ciclo de auto-verificación de la unidad óptica/quimioluminiscente antes de procesar.</li>
+            <li>Verificar vigencia de reactivos, esferas (beads) recubiertas y sustrato quimioluminiscente antes de cargarlos al equipo.</li>
+            <li>Calibrar cada analito según el inserto y registrar el lote utilizado; recalibrar al cambiar de lote de reactivo.</li>
+            <li>Asegurar que las muestras estén centrifugadas, sin hemólisis ni fibrina, antes de colocarlas en el carrusel de muestras.</li>
+            <li>Ejecutar el control de calidad en los niveles establecidos al inicio de jornada antes de liberar resultados de pacientes.</li>
+            <li>Al finalizar el turno, retirar reactivos abiertos a refrigeración y ejecutar la rutina de mantenimiento/lavado programada.</li>
+          </ol>
+        </div>
+
+        <!-- ══════ UROANÁLISIS — equipos nuevos ══════ -->
+        <!-- EU-5600 Pro -->
+        <div class="guia-card" data-equipo="eu5600">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Uroanálisis</span>
+            <span class="guia-titulo">EU-5600 Pro Mindray — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar a que complete el auto-diagnóstico del módulo de tiras reactivas y del módulo de sedimento (si aplica).</li>
+            <li>Verificar que las tiras reactivas estén dentro de fecha de vencimiento y el frasco bien cerrado; la humedad las deteriora rápidamente.</li>
+            <li>Ejecutar el control de calidad con soluciones control positivo y negativo al inicio de cada jornada antes de procesar pacientes.</li>
+            <li>Usar muestra de orina fresca (menos de 2 horas) o refrigerada correctamente identificada; homogenizar suavemente antes de procesar.</li>
+            <li>Si se trabaja con el módulo de sedimento, verificar la limpieza de la cámara de flujo y la calibración óptica antes de iniciar.</li>
+            <li>Al finalizar la jornada, limpiar la plataforma/módulos según el manual y no usar solventes abrasivos sobre las superficies ópticas.</li>
+          </ol>
+        </div>
+
+        <!-- Clinitek Status (Viera) -->
+        <div class="guia-card" data-equipo="clinitekstatus">
+          <div class="guia-card-header">
+            <span class="guia-badge" style="background:rgba(255,255,255,0.15);">Uroanálisis</span>
+            <span class="guia-titulo">Siemens Clinitek Status — Uso y recomendaciones</span>
+          </div>
+          <ol class="guia-steps">
+            <li>Encender el equipo y esperar que finalice la verificación automática antes de iniciar la lectura de tiras.</li>
+            <li>Verificar que las tiras reactivas Multistix (o equivalente compatible) estén vigentes y el frasco bien cerrado para evitar deterioro por humedad.</li>
+            <li>Correr el control de calidad con soluciones Chek-Stix positivo/negativo al inicio de cada jornada, sin omitir este paso.</li>
+            <li>Usar orina fresca (menos de 2 horas) o refrigerada; mezclar suavemente antes de sumergir la tira.</li>
+            <li>Sumergir la tira exactamente 1 segundo, retirar el exceso por el borde del frasco y colocarla en la plataforma sin doblarla.</li>
+            <li>Limpiar la plataforma de lectura con paño húmedo al finalizar la jornada; no usar solventes ni objetos abrasivos.</li>
+          </ol>
+        </div>
+
       </div>
     </div>
   </div><!-- /tab-guia -->
+
 
   <!-- TAB TELÉFONOS -->
   <div id="tab-telefonos" class="tab-panel" style="display:none">
@@ -1362,7 +1673,68 @@ footer strong { color:rgba(255,255,255,0.7); }
   window.addEventListener('resize',resize); resize(); draw();
 })();
 
-/* CÓDIGOS — almacenados como SHA-256, nunca en texto plano */
+/* ════════════════════════════════════════════════════════════════
+   CATÁLOGO DE EQUIPOS — GUÍA RÁPIDA
+   Para agregar un equipo nuevo:
+     1) Añade su entrada en EQUIPOS_INFO (slug único, área, nombre, badge)
+     2) Escribe su tarjeta de pasos en #guia-lista (data-equipo="slug")
+     3) Agrega el slug a la lista de cada cliente en EQUIPOS_POR_CLIENTE
+   ════════════════════════════════════════════════════════════════ */
+const AREAS_ORDEN = ["Hematología","Coagulación","Química Clínica","Inmunoanálisis","Gases en Sangre","Electrolitos","Uroanálisis"];
+
+const EQUIPOS_INFO = {
+  bc6200:         { area:"Hematología",      nombre:"Mindray BC-6200" },
+  siemens:        { area:"Coagulación",      nombre:"Siemens CA-660" },
+  exl200:         { area:"Inmunoanálisis",   nombre:"EXL 200" },
+  rp500:          { area:"Gases en Sangre",  nombre:"Siemens RapidPoint 500" },
+  atellica:       { area:"Química Clínica", nombre:"Siemens Atellica 1500" },
+  clinitek:       { area:"Uroanálisis",      nombre:"Clinitek Advantus" },
+
+  bc5150:         { area:"Hematología",      nombre:"Mindray BC-5150" },
+  bc760:          { area:"Hematología",      nombre:"Mindray BC-760" },
+  bc515:          { area:"Hematología",      nombre:"Mindray BC-515" },
+
+  ca600:          { area:"Coagulación",      nombre:"CA-600 Series" },
+  ca660sys:       { area:"Coagulación",      nombre:"Sysmex CA-660" },
+  ca560sys:       { area:"Coagulación",      nombre:"Sysmex CA-560" },
+
+  bs240pro:       { area:"Química Clínica", nombre:"Mindray BS-240 Pro" },
+  bs600m:         { area:"Química Clínica", nombre:"Mindray BS-600M" },
+  bs120:          { area:"Química Clínica", nombre:"Mindray BS-120" },
+
+  cl1200i:        { area:"Inmunoanálisis",   nombre:"Mindray CL-1200i" },
+  cl900i:         { area:"Inmunoanálisis",   nombre:"Mindray CL-900i" },
+  alegria1:       { area:"Inmunoanálisis",   nombre:"Alegria 1" },
+  alegria2:       { area:"Inmunoanálisis",   nombre:"Alegria 2" },
+  immulite1:      { area:"Inmunoanálisis",   nombre:"Immulite 1" },
+
+  smartlyte:      { area:"Electrolitos",     nombre:"Diamond SmartLyte Plus" },
+
+  eu5600:         { area:"Uroanálisis",      nombre:"EU-5600 Pro Mindray" },
+  clinitekstatus: { area:"Uroanálisis",      nombre:"Siemens Clinitek Status" },
+};
+
+/* Equipos visibles por cliente (clave = nombre del cliente en CODIGOS_VALIDOS) */
+const EQUIPOS_POR_CLIENTE = {
+  "Hospital Escuela":     ["bc6200","siemens","exl200","rp500","atellica","clinitek"],
+  "San Felipe":           ["ca600","ca660sys","bs240pro","smartlyte","bs600m","cl1200i"],
+  "Medical Center":       ["bc5150","bs240pro","cl900i","bc760"],
+  "Viera":                ["bc515","clinitekstatus","bs120","bs600m"],
+  "Microlab":             ["bc5150","bs240pro","alegria2","ca560sys"],
+  "CDC":                  ["bc760","bs240pro"],
+  "Hospital del Valle":   ["bc5150","bc760"],
+  "Bueso Arias":          ["bc760","alegria2","bs240pro","alegria1"],
+  "Laboratorios Fiallos": ["eu5600","cl900i","immulite1","alegria2"],
+};
+
+/* Devuelve la lista de slugs de equipo visibles para el cliente actual.
+   El rol 'it' (Admin General) ve siempre el catálogo completo. */
+function getEquiposCliente(){
+  if(rolActual==='it') return Object.keys(EQUIPOS_INFO);
+  return EQUIPOS_POR_CLIENTE[clienteActual] || [];
+}
+
+
 /* Logos: coloca los archivos en la carpeta /Logos junto a este HTML (png o jpg) */
 const CODIGOS_VALIDOS = [
   { hash:"23d8b81869bb3aa3d4a67fc1a23d4fef124994578c93452f98d192d492b1c4c4", nombre:"Admin General",   rol:"it",   logo:"Logos/AdminGeneral.png" },
@@ -1390,6 +1762,7 @@ const MAX_INTENTOS = 3;
 const TIMEOUT_MS = 15 * 60 * 1000; /* 15 min inactividad */
 
 let rolActual = "view";
+let clienteActual = "";
 let sessionTimer = null;
 
 function getIntentos(){ return parseInt(sessionStorage.getItem(INTENTOS_KEY)||'0'); }
@@ -1498,6 +1871,7 @@ async function checkCode(){
 
 function showMain(nombre, rol, logo){
   rolActual = rol || "view";
+  clienteActual = nombre || "";
   document.getElementById('lock-screen').style.display='none';
   const mc=document.getElementById('main-content');
   mc.style.display='flex'; mc.classList.add('visible');
@@ -1519,6 +1893,7 @@ function showMain(nombre, rol, logo){
   }
   resetTimer();
   renderTarjetas();
+  initGuia();
   showToast('Bienvenido, '+nombre);
 }
 
@@ -1529,7 +1904,7 @@ function logout(){
   mc.style.display='none'; mc.classList.remove('visible');
   codeInput.value=''; codeInput.classList.remove('ok','error');
   errorMsg.style.display='none';
-  rolActual='view'; hintsEl.textContent='';
+  rolActual='view'; clienteActual=''; hintsEl.textContent='';
   checkDelay=400;
   const logoEl=document.getElementById('session-logo');
   logoEl.removeAttribute('src');
@@ -1748,8 +2123,10 @@ function descargarGuiaPDF(equipoFiltro, equipoNombre){
     // Página se actualiza al final
   }
 
-  // Recolectar tarjetas
+  // Recolectar tarjetas (cuando es 'todos', limitar a los equipos del cliente actual)
+  const equiposPermitidos = getEquiposCliente();
   const cards = Array.from(document.querySelectorAll('#guia-lista .guia-card'))
+    .filter(c => equiposPermitidos.includes(c.getAttribute('data-equipo')))
     .filter(c => equipoFiltro==='todos' || c.getAttribute('data-equipo')===equipoFiltro);
 
   // ── Primera pasada: estimar total páginas ──
@@ -1882,20 +2259,103 @@ function descargarGuiaPDF(equipoFiltro, equipoNombre){
 
 function buscarGuia(){
   const q = document.getElementById("guia-buscar").value.trim().toLowerCase();
-  const cards = document.querySelectorAll("#guia-lista .guia-card");
+  const equiposCliente = getEquiposCliente();
+
+  if(!q){
+    // Se borró el texto de búsqueda: restaurar la selección que había ANTES de empezar a buscar
+    if(guiaBuscandoActivo){
+      guiaBuscandoActivo = false;
+      if(guiaAreaPreBusqueda){
+        const areaBtn = document.querySelector(`.guia-area-chip[data-area="${guiaAreaPreBusqueda}"]`);
+        seleccionarArea(guiaAreaPreBusqueda, areaBtn);
+        if(guiaEquipoPreBusqueda){
+          // Si el área tenía varios equipos, seleccionarArea ya reconstruyó los botones; elegir el correcto
+          const eqBtn = document.querySelector(`#guia-equipos-wrap [data-equipo-btn="${guiaEquipoPreBusqueda}"]`);
+          if(eqBtn) seleccionarEquipo(guiaEquipoPreBusqueda, eqBtn);
+        }
+      } else {
+        // No había ninguna selección previa (vista inicial del paso 1)
+        guiaAreaActual = null;
+        guiaEquipoActual = null;
+        document.querySelectorAll('.guia-area-chip').forEach(b=>b.classList.remove('active'));
+        document.getElementById('guia-paso-equipo').style.display = 'none';
+        document.getElementById('guia-equipos-wrap').innerHTML = '';
+        document.getElementById('guia-pdf-btns').style.display = 'none';
+        document.querySelectorAll('#guia-lista .guia-card').forEach(c=>c.style.display='none');
+        const vacioElInit = document.getElementById('guia-vacio-seleccion');
+        vacioElInit.textContent = 'Elige un área arriba para ver los equipos disponibles.';
+        vacioElInit.style.display = 'block';
+      }
+      document.getElementById('guia-sin-resultados').style.display = 'none';
+    }
+    return;
+  }
+
+  // Primer carácter de una nueva búsqueda: recordar la selección actual para poder restaurarla después
+  if(!guiaBuscandoActivo){
+    guiaBuscandoActivo = true;
+    guiaAreaPreBusqueda = guiaAreaActual;
+    guiaEquipoPreBusqueda = guiaEquipoActual;
+  }
+
+  // Con texto en el buscador: buscar entre TODOS los equipos del cliente, ignorando el paso de área/equipo
+  document.getElementById('guia-vacio-seleccion').style.display = 'none';
   let visibles = 0;
-  cards.forEach(card => {
-    const equipo = card.getAttribute("data-equipo");
-    const texto  = card.innerText.toLowerCase();
-    const filtroActivo = document.querySelector(".guia-filtro.active");
-    const filtroVal = filtroActivo ? filtroActivo.getAttribute("onclick").match(/filtrarGuia\('([^']+)/)?.[1] : "todos";
-    const equipoOk = !filtroVal || filtroVal === "todos" || equipo === filtroVal;
-    const textoOk  = !q || texto.includes(q);
-    const mostrar  = equipoOk && textoOk;
-    card.style.display = mostrar ? "" : "none";
-    if (mostrar) visibles++;
+  let slugsVisibles = [];
+  document.querySelectorAll('#guia-lista .guia-card').forEach(card=>{
+    const slug = card.dataset.equipo;
+    const perteneceCliente = equiposCliente.includes(slug);
+    const texto = card.textContent.toLowerCase();
+    const mostrar = perteneceCliente && texto.includes(q);
+    card.style.display = mostrar ? 'block' : 'none';
+    if(mostrar){ visibles++; slugsVisibles.push(slug); }
   });
-  document.getElementById("guia-sin-resultados").style.display = visibles === 0 ? "block" : "none";
+  document.getElementById('guia-sin-resultados').style.display = visibles === 0 ? 'block' : 'none';
+
+  // Sincronizar los chips de Área/Equipo con lo que realmente se está mostrando,
+  // para que no quede marcado activo un área/equipo de una selección anterior.
+  document.querySelectorAll('.guia-area-chip').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('#guia-equipos-wrap .guia-filtro').forEach(b=>b.classList.remove('active'));
+
+  if(visibles === 1){
+    const slug = slugsVisibles[0];
+    const info = EQUIPOS_INFO[slug];
+    guiaAreaActual = info ? info.area : null;
+    guiaEquipoActual = slug;
+
+    // Marcar el chip de área correspondiente
+    const areaBtn = document.querySelector(`.guia-area-chip[data-area="${guiaAreaActual}"]`);
+    if(areaBtn) areaBtn.classList.add('active');
+
+    // Reconstruir/mostrar el paso 2 si el área tiene más de un equipo, marcando el correcto
+    const equiposDelArea = equiposCliente.filter(s => EQUIPOS_INFO[s] && EQUIPOS_INFO[s].area === guiaAreaActual);
+    const pasoEquipo = document.getElementById('guia-paso-equipo');
+    const equiposWrap = document.getElementById('guia-equipos-wrap');
+    if(equiposDelArea.length > 1){
+      pasoEquipo.style.display = 'block';
+      equiposWrap.innerHTML = equiposDelArea.map(s =>
+        `<button class="guia-filtro${s===slug?' active':''}" data-equipo-btn="${s}" onclick="seleccionarEquipo('${s}', this)">${EQUIPOS_INFO[s].nombre}</button>`
+      ).join('');
+    } else {
+      pasoEquipo.style.display = 'none';
+      equiposWrap.innerHTML = '';
+    }
+
+    // Botón de descarga PDF del equipo encontrado
+    const pdfBtns = document.getElementById('guia-pdf-btns');
+    const pdfBtnsDin = document.getElementById('guia-pdf-btns-dinamico');
+    pdfBtnsDin.innerHTML = info
+      ? `<button class="guia-pdf-btn" onclick="descargarGuiaPDF('${slug}','${info.nombre.replace(/'/g,"\\'")}')">${info.nombre}</button>`
+      : '';
+    pdfBtns.style.display = visibles ? 'flex' : 'none';
+  } else {
+    // 0 o varias tarjetas visibles: ningún área/equipo único que marcar
+    guiaAreaActual = null;
+    guiaEquipoActual = null;
+    document.getElementById('guia-paso-equipo').style.display = 'none';
+    document.getElementById('guia-equipos-wrap').innerHTML = '';
+    document.getElementById('guia-pdf-btns').style.display = 'none';
+  }
 }
 
 function filtrarTelefonos(){
@@ -2245,15 +2705,128 @@ function cancelEditSpsAlt(){
 }
 
 
-/* GUÍA FILTRO */
-function filtrarGuia(equipo, btn){
-  document.querySelectorAll(".guia-filtro").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  var b=document.getElementById("guia-buscar"); if(b) b.value="";
-  document.querySelectorAll("#guia-lista .guia-card").forEach(card=>{
-    card.style.display = (equipo==="todos" || card.dataset.equipo===equipo) ? "block" : "none";
+/* ════════ GUÍA RÁPIDA — Área → Equipo, filtrado por cliente ════════ */
+let guiaAreaActual = null;
+let guiaEquipoActual = null;
+let guiaAreaPreBusqueda = null;
+let guiaEquipoPreBusqueda = null;
+let guiaBuscandoActivo = false;
+
+function initGuia(){
+  const equipos = getEquiposCliente();
+  const sinEquiposEl = document.getElementById('guia-sin-equipos');
+  const buscadorWrap = document.getElementById('guia-buscador-wrap');
+  const pasoArea = document.getElementById('guia-paso-area');
+
+  if(!equipos.length){
+    guiaAreaActual = null;
+    guiaEquipoActual = null;
+    guiaAreaPreBusqueda = null;
+    guiaEquipoPreBusqueda = null;
+    guiaBuscandoActivo = false;
+    sinEquiposEl.style.display = 'block';
+    buscadorWrap.style.display = 'none';
+    pasoArea.style.display = 'none';
+    document.getElementById('guia-paso-equipo').style.display = 'none';
+    document.getElementById('guia-pdf-btns').style.display = 'none';
+    document.getElementById('guia-vacio-seleccion').style.display = 'none';
+    document.getElementById('guia-sin-resultados').style.display = 'none';
+    document.querySelectorAll('#guia-lista .guia-card').forEach(c=>c.style.display='none');
+    return;
+  }
+
+  sinEquiposEl.style.display = 'none';
+  buscadorWrap.style.display = '';
+  pasoArea.style.display = '';
+
+  // Agrupar equipos del cliente por área, respetando el orden definido
+  const areasDisponibles = AREAS_ORDEN.filter(area =>
+    equipos.some(slug => EQUIPOS_INFO[slug] && EQUIPOS_INFO[slug].area === area)
+  );
+
+  const wrap = document.getElementById('guia-areas-wrap');
+  wrap.innerHTML = areasDisponibles.map(area => {
+    const count = equipos.filter(slug => EQUIPOS_INFO[slug] && EQUIPOS_INFO[slug].area === area).length;
+    return `<button class="guia-area-chip" data-area="${area}" onclick="seleccionarArea('${area}', this)">
+      ${area} <span class="guia-area-count">${count}</span>
+    </button>`;
+  }).join('');
+
+  guiaAreaActual = null;
+  guiaEquipoActual = null;
+  guiaAreaPreBusqueda = null;
+  guiaEquipoPreBusqueda = null;
+  guiaBuscandoActivo = false;
+  document.getElementById('guia-paso-equipo').style.display = 'none';
+  document.getElementById('guia-equipos-wrap').innerHTML = '';
+  document.getElementById('guia-pdf-btns').style.display = 'none';
+  document.getElementById('guia-buscar').value = '';
+  const vacioElInit = document.getElementById('guia-vacio-seleccion');
+  vacioElInit.textContent = 'Elige un área arriba para ver los equipos disponibles.';
+  vacioElInit.style.display = 'block';
+  document.getElementById('guia-sin-resultados').style.display = 'none';
+  document.querySelectorAll('#guia-lista .guia-card').forEach(c=>c.style.display='none');
+
+  // Si solo hay un área, selecciónala automáticamente para ahorrar un clic
+  if(areasDisponibles.length===1){
+    const onlyBtn = wrap.querySelector('.guia-area-chip');
+    if(onlyBtn) seleccionarArea(areasDisponibles[0], onlyBtn);
+  }
+}
+
+function seleccionarArea(area, btn){
+  guiaAreaActual = area;
+  guiaEquipoActual = null;
+  guiaBuscandoActivo = false;
+  document.getElementById('guia-buscar').value = '';
+  document.querySelectorAll('.guia-area-chip').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  const equipos = getEquiposCliente().filter(slug => EQUIPOS_INFO[slug] && EQUIPOS_INFO[slug].area === area);
+  const pasoEquipo = document.getElementById('guia-paso-equipo');
+  const equiposWrap = document.getElementById('guia-equipos-wrap');
+
+  if(equipos.length > 1){
+    pasoEquipo.style.display = 'block';
+    equiposWrap.innerHTML = equipos.map(slug =>
+      `<button class="guia-filtro" data-equipo-btn="${slug}" onclick="seleccionarEquipo('${slug}', this)">${EQUIPOS_INFO[slug].nombre}</button>`
+    ).join('');
+    const vacioEl = document.getElementById('guia-vacio-seleccion');
+    vacioEl.textContent = 'Elige el equipo arriba para ver su guía de uso.';
+    vacioEl.style.display = 'block';
+    document.getElementById('guia-pdf-btns').style.display = 'none';
+    document.querySelectorAll('#guia-lista .guia-card').forEach(c=>c.style.display='none');
+    document.getElementById('guia-sin-resultados').style.display = 'none';
+  } else {
+    pasoEquipo.style.display = 'none';
+    equiposWrap.innerHTML = '';
+    // Un solo equipo en el área: mostrarlo directamente
+    seleccionarEquipo(equipos[0], null);
+  }
+}
+
+function seleccionarEquipo(slug, btn){
+  guiaEquipoActual = slug;
+  guiaBuscandoActivo = false;
+  document.querySelectorAll('#guia-equipos-wrap .guia-filtro').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  document.getElementById('guia-vacio-seleccion').style.display = 'none';
+  document.getElementById('guia-buscar').value = '';
+
+  document.querySelectorAll('#guia-lista .guia-card').forEach(card=>{
+    card.style.display = (card.dataset.equipo === slug) ? 'block' : 'none';
   });
-  var sr=document.getElementById("guia-sin-resultados"); if(sr) sr.style.display="none";
+  document.getElementById('guia-sin-resultados').style.display = 'none';
+
+  // Botón de descarga PDF del equipo elegido
+  const pdfBtns = document.getElementById('guia-pdf-btns');
+  const pdfBtnsDin = document.getElementById('guia-pdf-btns-dinamico');
+  const info = EQUIPOS_INFO[slug];
+  pdfBtnsDin.innerHTML = info
+    ? `<button class="guia-pdf-btn" onclick="descargarGuiaPDF('${slug}','${info.nombre.replace(/'/g,"\\'")}')">${info.nombre}</button>`
+    : '';
+  pdfBtns.style.display = 'flex';
 }
 
 /* RELOJ */
