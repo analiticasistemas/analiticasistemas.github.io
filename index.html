@@ -715,28 +715,6 @@ footer strong { color:rgba(255,255,255,0.7); }
   white-space:nowrap;
 }
 
-/* ===== BANNER FERIADO MORAZÁNICO ===== */
-.feriado-banner{position:relative;overflow:hidden;display:flex;align-items:center;gap:18px;
-  max-width:680px;margin:0 auto 1.6rem;padding:14px 20px;border-radius:14px;
-  background:linear-gradient(135deg,#0A3D6B 0%,#0E5A9C 55%,#0A3D6B 100%);
-  box-shadow:0 8px 24px rgba(4,44,83,.25);color:#fff;
-  animation:fadeSlideUp .7s cubic-bezier(.22,1,.36,1) both;}
-.feriado-banner::before{content:'';position:absolute;inset:0;
-  background:linear-gradient(180deg,#00BCE4 0 4px,transparent 4px calc(100% - 4px),#00BCE4 calc(100% - 4px));pointer-events:none;}
-.feriado-medallon{flex:0 0 auto;width:78px;height:78px;border-radius:50%;padding:3px;
-  background:linear-gradient(135deg,#F5D27A,#B8862B,#F5D27A);box-shadow:0 0 0 3px rgba(255,255,255,.15);}
-.feriado-medallon .inner{width:100%;height:100%;border-radius:50%;overflow:hidden;background:#E9EEF4;display:flex;align-items:flex-end;justify-content:center;}
-.feriado-medallon img,.feriado-medallon svg{width:100%;height:100%;object-fit:cover;object-position:top;display:block;}
-.feriado-texto{flex:1;min-width:0;text-align:left;}
-.feriado-kicker{font-size:.68rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:#7FE0F5;}
-.feriado-titulo{font-size:1.35rem;font-weight:900;letter-spacing:.03em;text-transform:uppercase;line-height:1.15;margin:2px 0 3px;}
-.feriado-sub{font-size:.82rem;color:#D6E6F5;line-height:1.35;}
-.feriado-sub b{color:#F5D27A;font-weight:700;}
-.feriado-bandera{flex:0 0 auto;width:96px;height:58px;border-radius:4px;overflow:hidden;
-  box-shadow:0 3px 10px rgba(0,0,0,.35);transform-origin:left center;animation:flagWave 3.5s ease-in-out infinite;}
-@keyframes flagWave{0%,100%{transform:perspective(300px) rotateY(0) skewY(0)}50%{transform:perspective(300px) rotateY(-10deg) skewY(-1.5deg)}}
-@media (max-width:560px){.feriado-banner{flex-wrap:wrap;justify-content:center;text-align:center;gap:12px}
-  .feriado-texto{text-align:center;flex-basis:100%;order:3}.feriado-titulo{font-size:1.1rem}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -833,34 +811,6 @@ footer strong { color:rgba(255,255,255,0.7); }
   </div>
   <div class="content-area">
   <div id="tab-tgu" class="tab-panel">
-    <div class="feriado-banner" data-feriado>
-      <div class="feriado-medallon"><div class="inner">
-        <img src="morazan.png" alt="Francisco Morazán" onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))">
-        <template><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Francisco Morazán">
-<rect width="100" height="100" fill="#DCE5EE"/>
-<path d="M8 100 C10 80 24 72 38 69 L62 69 C76 72 90 80 92 100 Z" fill="#14233A"/>
-<path d="M14 84 C18 76 26 73 32 72 L30 80 Z M86 84 C82 76 74 73 68 72 L70 80 Z" fill="#C9A24A"/>
-<path d="M40 64 L60 64 L62 74 L50 80 L38 74 Z" fill="#1E3352"/>
-<path d="M44 72 L50 80 L56 72" fill="none" stroke="#C9A24A" stroke-width="2"/>
-<rect x="44" y="54" width="12" height="13" fill="#C99A7B"/>
-<ellipse cx="50" cy="40" rx="15" ry="18" fill="#D8AE8E"/>
-<path d="M34 38 C33 22 42 17 52 18 C63 19 68 26 66 38 C64 31 60 27 55 27 C48 26 40 29 36 42 Z" fill="#2B1D14"/>
-<path d="M35 38 C34 46 36 52 39 54 L38 42 Z M65 38 C66 46 64 52 61 54 L62 42 Z" fill="#2B1D14"/>
-</svg></template>
-      </div></div>
-      <div class="feriado-texto">
-        <div class="feriado-kicker">Guardia Feriado Morazánico</div>
-        <div class="feriado-titulo">Técnicos de turno en feriado</div>
-        <div class="feriado-sub">En honor al General <b>Francisco Morazán</b> · Héroe Nacional de Honduras</div>
-      </div>
-      <div class="feriado-bandera"><svg viewBox="0 0 72 36" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-label="Bandera de Honduras" width="100%" height="100%">
-<rect width="72" height="36" fill="#00BCE4"/><rect y="12" width="72" height="12" fill="#fff"/>
-<defs><polygon id="hnStar" points="0,-1 0.2245,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2245,-0.309" fill="#00BCE4"/></defs>
-<use href="#hnStar" transform="translate(36,18) scale(2.6)"/>
-<use href="#hnStar" transform="translate(26,14.5) scale(2.6)"/><use href="#hnStar" transform="translate(46,14.5) scale(2.6)"/>
-<use href="#hnStar" transform="translate(26,21.5) scale(2.6)"/><use href="#hnStar" transform="translate(46,21.5) scale(2.6)"/>
-</svg></div>
-    </div>
     
     <div class="tarjetas-header">
       <h3>
@@ -966,34 +916,6 @@ footer strong { color:rgba(255,255,255,0.7); }
 
   <!-- TAB SPS -->
   <div id="tab-sps" class="tab-panel" style="display:none">
-    <div class="feriado-banner" data-feriado>
-      <div class="feriado-medallon"><div class="inner">
-        <img src="morazan.png" alt="Francisco Morazán" onerror="this.replaceWith(this.nextElementSibling.content.cloneNode(true))">
-        <template><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="Francisco Morazán">
-<rect width="100" height="100" fill="#DCE5EE"/>
-<path d="M8 100 C10 80 24 72 38 69 L62 69 C76 72 90 80 92 100 Z" fill="#14233A"/>
-<path d="M14 84 C18 76 26 73 32 72 L30 80 Z M86 84 C82 76 74 73 68 72 L70 80 Z" fill="#C9A24A"/>
-<path d="M40 64 L60 64 L62 74 L50 80 L38 74 Z" fill="#1E3352"/>
-<path d="M44 72 L50 80 L56 72" fill="none" stroke="#C9A24A" stroke-width="2"/>
-<rect x="44" y="54" width="12" height="13" fill="#C99A7B"/>
-<ellipse cx="50" cy="40" rx="15" ry="18" fill="#D8AE8E"/>
-<path d="M34 38 C33 22 42 17 52 18 C63 19 68 26 66 38 C64 31 60 27 55 27 C48 26 40 29 36 42 Z" fill="#2B1D14"/>
-<path d="M35 38 C34 46 36 52 39 54 L38 42 Z M65 38 C66 46 64 52 61 54 L62 42 Z" fill="#2B1D14"/>
-</svg></template>
-      </div></div>
-      <div class="feriado-texto">
-        <div class="feriado-kicker">Guardia Feriado Morazánico</div>
-        <div class="feriado-titulo">Técnicos de turno en feriado</div>
-        <div class="feriado-sub">En honor al General <b>Francisco Morazán</b> · Héroe Nacional de Honduras</div>
-      </div>
-      <div class="feriado-bandera"><svg viewBox="0 0 72 36" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-label="Bandera de Honduras" width="100%" height="100%">
-<rect width="72" height="36" fill="#00BCE4"/><rect y="12" width="72" height="12" fill="#fff"/>
-<defs><polygon id="hnStar" points="0,-1 0.2245,-0.309 0.9511,-0.309 0.3633,0.118 0.5878,0.809 0,0.382 -0.5878,0.809 -0.3633,0.118 -0.9511,-0.309 -0.2245,-0.309" fill="#00BCE4"/></defs>
-<use href="#hnStar" transform="translate(36,18) scale(2.6)"/>
-<use href="#hnStar" transform="translate(26,14.5) scale(2.6)"/><use href="#hnStar" transform="translate(46,14.5) scale(2.6)"/>
-<use href="#hnStar" transform="translate(26,21.5) scale(2.6)"/><use href="#hnStar" transform="translate(46,21.5) scale(2.6)"/>
-</svg></div>
-    </div>
     
     <div class="tarjetas-header">
       <h3>
@@ -1885,7 +1807,7 @@ function buildFotoOptions(selectedRuta){
 
 /* TARJETAS — editar nombre, cargo, telefono aquí */
 const TARJETAS_DATA = [
-{ nombre:"Yesther Amaya", cargo:"Ingeniero", telefono:"+504 3179-4995", web:"www.analihsa.com", slogan:"Nuestra Cultura la Excelencia.", imagen:"Fotos/Yester.png" }
+{ nombre:"Brayan Giron", cargo:"Ingeniero", telefono:"+504 3175-0806", web:"www.analihsa.com", slogan:"Nuestra Cultura la Excelencia.", imagen:"Fotos/Brayan.png" }
 ];
 
 const tarjetasImagenes = {};
